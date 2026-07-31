@@ -1,0 +1,513 @@
+/* ============================================
+   VARIÁVEIS GLOBAIS
+   ============================================ */
+:root {
+  --primary: #0fa1d6;
+  --primary-dark: #048ca1;
+  --secondary: #60a4a2;
+  --bg-soft: #dddac7;
+  --bg-body: #f8f7f2;
+  --white: #ffffff;
+  --text-dark: #2c3e50;
+  --gray: #b0b0b0;
+  --danger: #e74c3c;
+
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --radius: 8px;
+  --shadow-focus: 0 0 0 4px rgba(15, 161, 214, 0.15);
+  --transition: 0.2s ease;
+}
+
+/* ============================================
+   RESET E BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-body);
+  font-family: var(--font);
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ============================================
+   CABEÇALHO
+   ============================================ */
+.page-header {
+  background: var(--white);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-bottom: 2px solid var(--bg-soft);
+}
+.page-header .container {
+  max-width: 1200px; /* Ampliado para telas maiores */
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.page-header h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  letter-spacing: -0.01em;
+}
+.page-header h1 span {
+  color: var(--primary);
+}
+.page-header .subtitle {
+  font-size: 0.875rem;
+  color: var(--gray);
+}
+
+/* ============================================
+   RODAPÉ
+   ============================================ */
+.page-footer {
+  background: var(--white);
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--gray);
+  border-top: 1px solid var(--bg-soft);
+  margin-top: auto;
+}
+.page-footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+.page-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   FORMULÁRIO (para cadastros/edições)
+   ============================================ */
+.django-form {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  font-family: var(--font);
+  color: var(--text-dark);
+}
+
+.django-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.django-form label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.25rem;
+  color: var(--text-dark);
+}
+
+.django-form label .required {
+  color: var(--danger);
+  margin-left: 2px;
+}
+
+.django-form input,
+.django-form textarea,
+.django-form select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: var(--font);
+  background: var(--bg-soft);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius);
+  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  color: var(--text-dark);
+  box-sizing: border-box;
+}
+
+.django-form input:focus,
+.django-form textarea:focus,
+.django-form select:focus {
+  outline: none;
+  background: var(--white);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-focus);
+}
+
+.django-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.django-form select:not([multiple]) {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2360a4a2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.django-form select[multiple] {
+  height: auto;
+  min-height: 120px;
+  padding: 0.5rem;
+  background-image: none;
+}
+
+.django-form .checkbox-group,
+.django-form .radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 0.25rem;
+}
+
+.django-form .checkbox-group label,
+.django-form .radio-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400;
+  font-size: 0.95rem;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.django-form input[type="checkbox"],
+.django-form input[type="radio"] {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.django-form input[type="file"] {
+  padding: 0.6rem;
+  background: var(--bg-soft);
+  border: 1.5px dashed var(--gray);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.django-form input[type="file"]:hover {
+  border-color: var(--secondary);
+}
+
+.django-form input[type="range"] {
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  accent-color: var(--primary);
+}
+
+.django-form input[type="color"] {
+  width: 60px;
+  height: 60px;
+  padding: 0.25rem;
+  border: 1.5px solid var(--gray);
+  border-radius: var(--radius);
+  cursor: pointer;
+  background: var(--white);
+}
+
+.django-form .help-text {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--gray);
+  margin-top: 0.25rem;
+}
+
+.django-form .errorlist {
+  list-style: none;
+  padding: 0;
+  margin: 0.25rem 0 0 0;
+  color: var(--danger);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.django-form .errorlist li {
+  margin-bottom: 2px;
+}
+
+.django-form .has-error input,
+.django-form .has-error textarea,
+.django-form .has-error select {
+  border-color: var(--danger);
+  background: #fff5f5;
+}
+.django-form .has-error input:focus,
+.django-form .has-error textarea:focus,
+.django-form .has-error select:focus {
+  box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.15);
+}
+
+.django-form .form-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.django-form .btn-submit {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 12px rgba(15, 161, 214, 0.25);
+}
+
+.django-form .btn-submit:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 161, 214, 0.3);
+}
+.django-form .btn-submit:active {
+  transform: scale(0.97);
+}
+
+/* ============================================
+   LISTAGEM (HOME)
+   ============================================ */
+.page-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  width: 100%;
+}
+
+/* Cabeçalho da listagem (busca + botões) */
+.page-list .list-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Busca */
+.page-list .search-bar {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.page-list .search-bar input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  font-size: 1rem;
+  font-family: var(--font);
+  background: var(--bg-soft);
+  border: 1.5px solid transparent;
+  border-radius: 50px;
+  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  color: var(--text-dark);
+}
+.page-list .search-bar input::placeholder {
+  color: var(--gray);
+}
+.page-list .search-bar input:focus {
+  outline: none;
+  background: var(--white);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-focus);
+}
+.page-list .search-bar .search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray);
+  font-size: 1.1rem;
+}
+
+/* Botões de ação (cadastrar) */
+.page-list .action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.page-list .action-buttons a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--primary);
+  color: var(--white);
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 2px 8px rgba(15, 161, 214, 0.2);
+}
+.page-list .action-buttons a:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 161, 214, 0.3);
+}
+.page-list .action-buttons a i {
+  font-size: 0.9rem;
+}
+
+/* Tabela */
+.page-list .table-wrapper {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  overflow-x: auto;
+}
+.page-list table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.page-list table thead {
+  background: var(--bg-soft);
+  border-bottom: 2px solid var(--primary);
+}
+.page-list table thead th {
+  padding: 1rem 1.2rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-dark);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+.page-list table tbody tr {
+  border-bottom: 1px solid var(--bg-soft);
+  transition: background var(--transition);
+}
+.page-list table tbody tr:hover {
+  background: #faf9f5;
+}
+.page-list table tbody td {
+  padding: 1rem 1.2rem;
+  vertical-align: middle;
+}
+.page-list table tbody td:last-child {
+  text-align: right;
+}
+.page-list table .actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+.page-list table .actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--gray);
+  transition: background var(--transition), color var(--transition);
+  text-decoration: none;
+}
+.page-list table .actions a:hover {
+  background: var(--bg-soft);
+}
+.page-list table .actions a.edit:hover {
+  color: var(--primary);
+}
+.page-list table .actions a.delete:hover {
+  color: var(--danger);
+}
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+/* Formulário */
+@media (max-width: 600px) {
+  .django-form {
+    padding: 1rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .django-form .checkbox-group,
+  .django-form .radio-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .django-form .form-actions {
+    justify-content: stretch;
+  }
+  .django-form .btn-submit {
+    width: 100%;
+  }
+}
+
+/* Listagem */
+@media (max-width: 768px) {
+  .page-list .list-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .page-list .action-buttons {
+    justify-content: stretch;
+  }
+  .page-list .action-buttons a {
+    flex: 1;
+    justify-content: center;
+  }
+  .page-list table thead {
+    display: none;
+  }
+  .page-list table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--bg-soft);
+    border-radius: var(--radius);
+    padding: 1rem;
+    background: var(--white);
+  }
+  .page-list table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--bg-soft);
+  }
+  .page-list table tbody td:last-child {
+    border-bottom: none;
+    justify-content: flex-end;
+  }
+  .page-list table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-right: 1rem;
+  }
+  .page-list table .actions {
+    justify-content: flex-end;
+  }
+}
+
+/* Ajustes para cabeçalho em telas muito pequenas */
+@media (max-width: 480px) {
+  .page-header {
+    padding: 1rem;
+  }
+  .page-header .container {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .page-header h1 {
+    font-size: 1.1rem;
+  }
+  .page-header .subtitle {
+    font-size: 0.75rem;
+  }
+}

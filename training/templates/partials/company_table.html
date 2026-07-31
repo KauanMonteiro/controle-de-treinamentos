@@ -1,0 +1,14 @@
+<tr>
+  <td data-label="Nome">{{ company.name }}</td>
+  <td data-label="CNPJ">{{ company.cnpj }}</td>
+  <td data-label="Ações">
+    <div class="actions">
+      <a href="{% url 'empresa_edit' company.id %}" class="edit" title="Editar">
+        <i class="fas fa-edit"></i>
+      </a>
+      <a href="{% url 'empresa_delete' company.id %}" class="delete" title="Excluir">
+        <i class="fas fa-trash"></i>
+      </a>
+    </div>
+  </td>
+</tr>

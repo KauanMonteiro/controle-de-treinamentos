@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  {% include "partials/head.html" %}
+<body>
+  {% include "partials/header.html" %}
+
+  <main>
+    <div class="page-list">
+      <div class="list-header">
+        <div class="search-bar">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" placeholder="" />
+        </div>
+        <div class="action-buttons">
+          <a href=""><i class="fas fa-plus"></i> Empresa</a>
+          <a href=""><i class="fas fa-plus"></i> Funcionário</a>
+          <a href=""><i class="fas fa-plus"></i> Usuário</a>
+        </div>
+      </div>
+
+      <!-- Tabela de empresas -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CNPJ</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for company in companies %}
+              {% include "partials/company_table.html" with company=company %}
+            {% empty %}
+              <tr>
+                <td colspan="4" style="text-align:center; padding:2rem; color:var(--gray);">
+                  Nenhuma empresa cadastrada.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  {% include "partials/footer.html" %}
+</body>
+</html>
