@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django.contrib.auth.hashers import make_password
 from .models import User
 
 class UserRegisterForm(ModelForm):
@@ -16,11 +17,11 @@ class UserRegisterForm(ModelForm):
 
         if not password:
             self.add_error('password', 'Password is required.')
-
+        return cleaned_data
     def save(self, commit=True):
         user = super().save(commit=False)
         user.username = self.cleaned_data['username']
-        user.password = self.cleaned_data['password']
+        user.password = make_password(self.cleaned_data['password'])
 
         if commit:
             user.save()
