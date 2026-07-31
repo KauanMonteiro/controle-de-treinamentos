@@ -13,9 +13,9 @@
           <input type="text" placeholder="" />
         </div>
         <div class="action-buttons">
-          <a href=""><i class="fas fa-plus"></i> Empresa</a>
+          <a href="{% url "company:register_company" %}"><i class="fas fa-plus"></i> Empresa</a>
           <a href=""><i class="fas fa-plus"></i> Funcionário</a>
-          <a href=""><i class="fas fa-plus"></i> Usuário</a>
+          <a href="{% url "user:register" %}"><i class="fas fa-plus"></i> Usuário</a>
         </div>
       </div>
 

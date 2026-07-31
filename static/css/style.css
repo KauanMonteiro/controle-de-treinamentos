@@ -11,6 +11,7 @@
   --text-dark: #2c3e50;
   --gray: #b0b0b0;
   --danger: #e74c3c;
+  --success: #27ae60;
 
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --radius: 8px;
@@ -46,7 +47,7 @@ body {
   border-bottom: 2px solid var(--bg-soft);
 }
 .page-header .container {
-  max-width: 1200px; /* Ampliado para telas maiores */
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -99,11 +100,9 @@ body {
   font-family: var(--font);
   color: var(--text-dark);
 }
-
 .django-form .form-group {
   margin-bottom: 1.5rem;
 }
-
 .django-form label {
   display: block;
   font-weight: 500;
@@ -112,12 +111,10 @@ body {
   margin-bottom: 0.25rem;
   color: var(--text-dark);
 }
-
 .django-form label .required {
   color: var(--danger);
   margin-left: 2px;
 }
-
 .django-form input,
 .django-form textarea,
 .django-form select {
@@ -132,7 +129,6 @@ body {
   color: var(--text-dark);
   box-sizing: border-box;
 }
-
 .django-form input:focus,
 .django-form textarea:focus,
 .django-form select:focus {
@@ -141,12 +137,10 @@ body {
   border-color: var(--primary);
   box-shadow: var(--shadow-focus);
 }
-
 .django-form textarea {
   resize: vertical;
   min-height: 100px;
 }
-
 .django-form select:not([multiple]) {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2360a4a2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -154,14 +148,12 @@ body {
   background-position: right 1rem center;
   padding-right: 2.5rem;
 }
-
 .django-form select[multiple] {
   height: auto;
   min-height: 120px;
   padding: 0.5rem;
   background-image: none;
 }
-
 .django-form .checkbox-group,
 .django-form .radio-group {
   display: flex;
@@ -169,7 +161,6 @@ body {
   gap: 1rem;
   padding-top: 0.25rem;
 }
-
 .django-form .checkbox-group label,
 .django-form .radio-group label {
   display: inline-flex;
@@ -180,7 +171,6 @@ body {
   margin-bottom: 0;
   cursor: pointer;
 }
-
 .django-form input[type="checkbox"],
 .django-form input[type="radio"] {
   width: 1.15rem;
@@ -189,7 +179,6 @@ body {
   cursor: pointer;
   flex-shrink: 0;
 }
-
 .django-form input[type="file"] {
   padding: 0.6rem;
   background: var(--bg-soft);
@@ -200,7 +189,6 @@ body {
 .django-form input[type="file"]:hover {
   border-color: var(--secondary);
 }
-
 .django-form input[type="range"] {
   width: 100%;
   padding: 0;
@@ -208,7 +196,6 @@ body {
   border: none;
   accent-color: var(--primary);
 }
-
 .django-form input[type="color"] {
   width: 60px;
   height: 60px;
@@ -218,14 +205,12 @@ body {
   cursor: pointer;
   background: var(--white);
 }
-
 .django-form .help-text {
   display: block;
   font-size: 0.8rem;
   color: var(--gray);
   margin-top: 0.25rem;
 }
-
 .django-form .errorlist {
   list-style: none;
   padding: 0;
@@ -237,7 +222,6 @@ body {
 .django-form .errorlist li {
   margin-bottom: 2px;
 }
-
 .django-form .has-error input,
 .django-form .has-error textarea,
 .django-form .has-error select {
@@ -249,13 +233,11 @@ body {
 .django-form .has-error select:focus {
   box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.15);
 }
-
 .django-form .form-actions {
   margin-top: 2rem;
   display: flex;
   justify-content: flex-end;
 }
-
 .django-form .btn-submit {
   background: var(--primary);
   color: var(--white);
@@ -268,7 +250,6 @@ body {
   transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
   box-shadow: 0 4px 12px rgba(15, 161, 214, 0.25);
 }
-
 .django-form .btn-submit:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
@@ -288,22 +269,17 @@ body {
   width: 100%;
 }
 
-/* Cabeçalho da listagem (busca + botões) */
-.page-list .list-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+/* Barra de busca (linha única) */
+.search-bar-wrapper {
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
-/* Busca */
-.page-list .search-bar {
-  flex: 1;
-  min-width: 200px;
+.search-bar {
   position: relative;
+  width: 100%;
 }
-.page-list .search-bar input {
+.search-bar input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 3rem;
   font-size: 1rem;
@@ -314,16 +290,16 @@ body {
   transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
   color: var(--text-dark);
 }
-.page-list .search-bar input::placeholder {
+.search-bar input::placeholder {
   color: var(--gray);
 }
-.page-list .search-bar input:focus {
+.search-bar input:focus {
   outline: none;
   background: var(--white);
   border-color: var(--primary);
   box-shadow: var(--shadow-focus);
 }
-.page-list .search-bar .search-icon {
+.search-bar .search-icon {
   position: absolute;
   left: 1rem;
   top: 50%;
@@ -332,13 +308,21 @@ body {
   font-size: 1.1rem;
 }
 
-/* Botões de ação (cadastrar) */
-.page-list .action-buttons {
+/* Botões de ação (linha abaixo) */
+.action-buttons-wrapper {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.action-buttons {
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-.page-list .action-buttons a {
+.action-buttons a {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -352,32 +336,32 @@ body {
   transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
   box-shadow: 0 2px 8px rgba(15, 161, 214, 0.2);
 }
-.page-list .action-buttons a:hover {
+.action-buttons a:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(15, 161, 214, 0.3);
 }
-.page-list .action-buttons a i {
+.action-buttons a i {
   font-size: 0.9rem;
 }
 
 /* Tabela */
-.page-list .table-wrapper {
+.table-wrapper {
   background: var(--white);
   border-radius: var(--radius);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   overflow-x: auto;
 }
-.page-list table {
+.table-wrapper table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
 }
-.page-list table thead {
+.table-wrapper table thead {
   background: var(--bg-soft);
   border-bottom: 2px solid var(--primary);
 }
-.page-list table thead th {
+.table-wrapper table thead th {
   padding: 1rem 1.2rem;
   text-align: left;
   font-weight: 600;
@@ -386,46 +370,55 @@ body {
   text-transform: uppercase;
   font-size: 0.8rem;
 }
-.page-list table tbody tr {
+.table-wrapper table tbody tr {
   border-bottom: 1px solid var(--bg-soft);
   transition: background var(--transition);
 }
-.page-list table tbody tr:hover {
+.table-wrapper table tbody tr:hover {
   background: #faf9f5;
 }
-.page-list table tbody td {
+.table-wrapper table tbody td {
   padding: 1rem 1.2rem;
   vertical-align: middle;
 }
-.page-list table tbody td:last-child {
-  text-align: right;
+
+.table-wrapper table tbody td:last-child {
+  text-align: center;
 }
-.page-list table .actions {
+
+.table-wrapper table .actions {
   display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
 }
-.page-list table .actions a {
+
+.table-wrapper table .actions a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   color: var(--gray);
-  transition: background var(--transition), color var(--transition);
+  transition: background var(--transition), color var(--transition), transform var(--transition);
   text-decoration: none;
+  font-size: 1rem;
 }
-.page-list table .actions a:hover {
+.table-wrapper table .actions a:hover {
   background: var(--bg-soft);
-}
-.page-list table .actions a.edit:hover {
-  color: var(--primary);
-}
-.page-list table .actions a.delete:hover {
-  color: var(--danger);
+  transform: scale(1.1);
 }
 
+.table-wrapper table .actions a.edit:hover {
+  color: var(--primary);
+}
+.table-wrapper table .actions a.view:hover {
+  color: var(--secondary);
+}
+.table-wrapper table .actions a.delete:hover {
+  color: var(--danger);
+}
 
 /* ============================================
    LOGIN
@@ -437,37 +430,31 @@ body {
   justify-content: center;
   padding: 2rem 1rem;
 }
-
 .login-container {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
 }
-
 .login-box {
   background: var(--white);
   padding: 2rem 2rem 1.5rem;
   border-radius: var(--radius);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
-
 .login-box h2 {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
   color: var(--text-dark);
 }
-
 .login-subtitle {
   color: var(--gray);
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
 }
-
 .login-form .form-group {
   margin-bottom: 1.25rem;
 }
-
 .login-form label {
   display: block;
   font-weight: 500;
@@ -475,7 +462,6 @@ body {
   margin-bottom: 0.25rem;
   color: var(--text-dark);
 }
-
 .login-form input {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -488,23 +474,19 @@ body {
   color: var(--text-dark);
   box-sizing: border-box;
 }
-
 .login-form input:focus {
   outline: none;
   background: var(--white);
   border-color: var(--primary);
   box-shadow: var(--shadow-focus);
 }
-
 .login-form .form-actions {
   margin-top: 1.5rem;
 }
-
 .login-form .btn-submit {
   width: 100%;
   justify-content: center;
 }
-
 .login-form .errorlist {
   list-style: none;
   padding: 0;
@@ -514,23 +496,21 @@ body {
   font-weight: 500;
   text-align: center;
 }
-
 .login-footer {
   margin-top: 1.5rem;
   text-align: center;
   font-size: 0.875rem;
 }
-
 .login-footer a {
   color: var(--primary);
   text-decoration: none;
   transition: color var(--transition);
 }
-
 .login-footer a:hover {
   color: var(--primary-dark);
   text-decoration: underline;
 }
+
 /* ============================================
    RESPONSIVIDADE
    ============================================ */
@@ -556,21 +536,17 @@ body {
 
 /* Listagem */
 @media (max-width: 768px) {
-  .page-list .list-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .page-list .action-buttons {
+  .action-buttons {
     justify-content: stretch;
   }
-  .page-list .action-buttons a {
+  .action-buttons a {
     flex: 1;
     justify-content: center;
   }
-  .page-list table thead {
+  .table-wrapper table thead {
     display: none;
   }
-  .page-list table tbody tr {
+  .table-wrapper table tbody tr {
     display: block;
     margin-bottom: 1rem;
     border: 1px solid var(--bg-soft);
@@ -578,24 +554,24 @@ body {
     padding: 1rem;
     background: var(--white);
   }
-  .page-list table tbody td {
+  .table-wrapper table tbody td {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--bg-soft);
   }
-  .page-list table tbody td:last-child {
+  .table-wrapper table tbody td:last-child {
     border-bottom: none;
-    justify-content: flex-end;
+    justify-content: center;
   }
-  .page-list table tbody td::before {
+  .table-wrapper table tbody td::before {
     content: attr(data-label);
     font-weight: 600;
     color: var(--text-dark);
     margin-right: 1rem;
   }
-  .page-list table .actions {
-    justify-content: flex-end;
+  .table-wrapper table .actions {
+    justify-content: center;
   }
 }
 
