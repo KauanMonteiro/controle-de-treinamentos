@@ -237,6 +237,7 @@ body {
   margin-top: 2rem;
   display: flex;
   justify-content: flex-end;
+  gap: 0.75rem;
 }
 .django-form .btn-submit {
   background: var(--primary);
@@ -258,9 +259,27 @@ body {
 .django-form .btn-submit:active {
   transform: scale(0.97);
 }
+.btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background: var(--bg-soft);
+  color: var(--text-dark);
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  border: none;
+  transition: background var(--transition), transform var(--transition);
+}
+.btn-cancel:hover {
+  background: #d1cdb7;
+  transform: translateY(-2px);
+}
 
 /* ============================================
-   LISTAGEM (HOME)
+   LISTAGEM (HOME e DETALHES)
    ============================================ */
 .page-list {
   max-width: 1200px;
@@ -274,7 +293,6 @@ body {
   width: 100%;
   margin-bottom: 1rem;
 }
-
 .search-bar {
   position: relative;
   width: 100%;
@@ -313,7 +331,6 @@ body {
   width: 100%;
   margin-bottom: 2rem;
 }
-
 .action-buttons {
   justify-content: center;
   align-items: center;
@@ -345,7 +362,47 @@ body {
   font-size: 0.9rem;
 }
 
-/* Tabela */
+/* ============================================
+   DETALHES DA EMPRESA
+   ============================================ */
+.company-header {
+  background: var(--white);
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.company-header .info h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.25rem;
+}
+.company-header .info span {
+  font-size: 0.95rem;
+  color: var(--gray);
+}
+.company-header .actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Botões do cabeçalho da empresa */
+.company-header .actions .btn-submit,
+.company-header .actions .btn-cancel {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+/* ============================================
+   TABELA
+   ============================================ */
 .table-wrapper {
   background: var(--white);
   border-radius: var(--radius);
@@ -381,18 +438,17 @@ body {
   padding: 1rem 1.2rem;
   vertical-align: middle;
 }
-
 .table-wrapper table tbody td:last-child {
   text-align: center;
 }
 
+/* Ações da tabela (ícones) */
 .table-wrapper table .actions {
   display: flex;
   gap: 0.75rem;
   justify-content: center;
   align-items: center;
 }
-
 .table-wrapper table .actions a {
   display: inline-flex;
   align-items: center;
@@ -409,7 +465,6 @@ body {
   background: var(--bg-soft);
   transform: scale(1.1);
 }
-
 .table-wrapper table .actions a.edit:hover {
   color: var(--primary);
 }
@@ -418,6 +473,47 @@ body {
 }
 .table-wrapper table .actions a.delete:hover {
   color: var(--danger);
+}
+
+/* ============================================
+   CABEÇALHO DA TABELA (título + botão adicionar)
+   ============================================ */
+.table-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  gap: 1rem;
+}
+.table-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.table-header .btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--secondary);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 2px 8px rgba(96, 164, 162, 0.2);
+}
+.table-header .btn-submit:hover {
+  background: #4d8a88;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(96, 164, 162, 0.3);
+}
+.table-header .btn-submit i {
+  font-size: 0.9rem;
 }
 
 /* ============================================
@@ -510,28 +606,10 @@ body {
   color: var(--primary-dark);
   text-decoration: underline;
 }
-/* Botão cancelar */
-.btn-cancel {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 2rem;
-  background: var(--bg-soft);
-  color: var(--text-dark);
-  border-radius: 50px;
-  font-weight: 500;
-  font-size: 1rem;
-  text-decoration: none;
-  transition: background var(--transition), transform var(--transition);
-}
-.btn-cancel:hover {
-  background: #d1cdb7;
-  transform: translateY(-2px);
-}
+
 /* ============================================
    RESPONSIVIDADE
    ============================================ */
-/* Formulário */
 @media (max-width: 600px) {
   .django-form {
     padding: 1rem;
@@ -544,20 +622,40 @@ body {
     gap: 0.5rem;
   }
   .django-form .form-actions {
-    justify-content: stretch;
+    flex-direction: column;
   }
-  .django-form .btn-submit {
+  .django-form .btn-submit,
+  .django-form .btn-cancel {
     width: 100%;
+    justify-content: center;
   }
 }
 
-/* Listagem */
 @media (max-width: 768px) {
+  .company-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .company-header .actions {
+    justify-content: stretch;
+  }
+  .company-header .actions .btn-submit,
+  .company-header .actions .btn-cancel {
+    flex: 1;
+    justify-content: center;
+  }
   .action-buttons {
     justify-content: stretch;
   }
   .action-buttons a {
     flex: 1;
+    justify-content: center;
+  }
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .table-header .btn-submit {
     justify-content: center;
   }
   .table-wrapper table thead {
@@ -592,7 +690,6 @@ body {
   }
 }
 
-/* Ajustes para cabeçalho em telas muito pequenas */
 @media (max-width: 480px) {
   .page-header {
     padding: 1rem;

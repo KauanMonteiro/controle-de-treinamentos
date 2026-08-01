@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  {% include "partials/head.html" %}
+<body>
+  {% include "partials/header.html" %}
+
+  <main>
+    <div class="page-list">
+      <!-- Cabeçalho da empresa -->
+      <div class="company-header">
+        <div class="info">
+          <h1>{{ company.name }}</h1>
+          <span>CNPJ: {{ company.cnpj }}</span>
+        </div>
+        <div class="table-header">
+          <a href="{% url 'company:edit_company' company.id %}" class="btn-submit">
+            <i class="fas fa-edit"></i> Editar
+          </a>
+          <a href="{% url 'home' %}" class="btn-cancel">
+            <i class="fas fa-arrow-left"></i> Voltar
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Tabela de funcionários -->
+      <div class="table-wrapper">
+        <div class="table-header">
+          <h2>Funcionários</h2>
+          <a href="{% url 'employee:register_employee' %}" class="btn-submit">
+            <i class="fas fa-plus"></i> Adicionar Funcionário
+          </a>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Cargo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for employee in employees %}
+              <tr>
+                <td data-label="Nome">{{ employee.name }}</td>
+                <td data-label="Cargo">{{ employee.role }}</td>
+                <td data-label="Ações">
+                  <div class="actions">
+                    <a href="{% url 'employee:edit_employee' employee.id %}" class="edit" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="" class="view" title="Ver mais">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'employee:delete_employee' employee.id %}" class="delete" title="Excluir">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="3" style="text-align:center; padding:2rem; color:var(--gray);">
+                  <i class="fas fa-user-slash" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                  Nenhum funcionário cadastrado nesta empresa.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  {% include "partials/footer.html" %}
+</body>
+</html>

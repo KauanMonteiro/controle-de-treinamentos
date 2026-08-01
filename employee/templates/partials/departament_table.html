@@ -1,0 +1,22 @@
+{% for department in departments %}
+  <tr>
+    <td data-label="Nome">{{ department.name }}</td>
+    <td data-label="Ações">
+      <div class="actions">
+        <a href="{% url 'employee:edit_department' department.id %}" class="edit" title="Editar">
+          <i class="fas fa-edit"></i>
+        </a>
+        <a href="{% url 'employee:delete_department' department.id %}" class="delete" title="Excluir">
+          <i class="fas fa-trash"></i>
+        </a>
+      </div>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="2" style="text-align:center; padding:2rem; color:var(--gray);">
+      <i class="fas fa-building" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+      Nenhum departamento cadastrado.
+    </td>
+  </tr>
+{% endfor %}

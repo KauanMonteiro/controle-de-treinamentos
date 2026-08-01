@@ -10,7 +10,7 @@ def register_department(request):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('employee:list_departments')
     return render(request,'pages/register_form.html',{'form':form})
 
 def register_role(request):
@@ -19,7 +19,7 @@ def register_role(request):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('employee:role_list')
     return render(request,'pages/register_form.html',{'form':form})
 
 def register_employee(request):
@@ -38,7 +38,7 @@ def edit_department(request, department_id):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('employee:list_departments')
     return render(request,'pages/register_form.html',{'form':form})
 
 def edit_role(request, role_id):
@@ -48,7 +48,7 @@ def edit_role(request, role_id):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('employee:role_list')
     return render(request,'pages/register_form.html',{'form':form})
 
 def edit_employee(request, employee_id):
@@ -79,3 +79,10 @@ def delete_employee(request, employee_id):
     employee.save()
     return redirect(request.path)
 
+def list_departments(request):
+    departments = Department.objects.filter(delete=False)
+    return render(request, 'pages/department_page.html', {'departments': departments})
+
+def role_list(request):
+    roles = Role.objects.filter(delete=False)
+    return render(request, 'pages/role_page.html', {'roles': roles})

@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  {% include "partials/head.html" %}
+<body>
+  {% include "partials/header.html" %}
+
+  <main>
+    <div class="page-list">
+      <!-- Cabeçalho da página -->
+      <div class="list-header django-form" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1rem;">
+        <h1 style="font-size: 1.5rem; font-weight: 600; color: var(--text-dark);">Cargos</h1>
+        <a href="{% url 'employee:register_role' %}" class="btn-submit" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+          <i class="fas fa-plus"></i> Adicionar Cargo
+        </a>
+      </div>
+
+      <!-- Tabela de cargos -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for role in roles %}
+              <tr>
+                <td data-label="Nome">{{ role.name }}</td>
+                <td data-label="Ações">
+                  <div class="actions">
+                    <a href="{% url 'employee:edit_role' role.id %}" class="edit" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'employee:delete_role' role.id %}" class="delete" title="Excluir">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="2" style="text-align:center; padding:2rem; color:var(--gray);">
+                  <i class="fas fa-briefcase" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                  Nenhum cargo cadastrado.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  {% include "partials/footer.html" %}
+</body>
+</html>
