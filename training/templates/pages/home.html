@@ -12,11 +12,23 @@
           <i class="fas fa-search search-icon"></i>
           <input type="text" placeholder="" />
         </div>
-        <div class="action-buttons">
-          <a href="{% url "company:register_company" %}"><i class="fas fa-plus"></i> Empresa</a>
-          <a href=""><i class="fas fa-plus"></i> Funcionário</a>
-          <a href="{% url "user:register" %}"><i class="fas fa-plus"></i> Usuário</a>
-        </div>
+          <div class="action-buttons">
+            <a href="{% url "company:register_company" %}">
+              <i class="fas fa-plus"></i> Empresa
+            </a>
+            <a href="{% url "employee:register_department" %}">
+              <i class="fas fa-plus"></i> Departamento
+            </a>
+            <a href="{% url "employee:register_role" %}">
+              <i class="fas fa-plus"></i> Função
+            </a>
+            <a href="{% url "employee:register_employee" %}">
+              <i class="fas fa-plus"></i> Funcionário
+            </a>
+            <a href="{% url "user:register" %}">
+              <i class="fas fa-plus"></i> Usuário
+            </a>
+          </div>
       </div>
 
       <!-- Tabela de empresas -->

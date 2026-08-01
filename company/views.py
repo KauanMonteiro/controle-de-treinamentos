@@ -22,4 +22,11 @@ def edit_company(request, company_id):
             return redirect('home')
     return render(request, 'pages/edit_company_form.html', {'form': form, 'company': company})
 
+@login_required
+def delete_company(request, company_id):
+    company = Company.objects.get(id=company_id)
+    company.delete = True
+    company.save()
+    return redirect('home')
+
 
