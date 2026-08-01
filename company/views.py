@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from .forms import CompanyForm
 from django.contrib.auth.decorators import login_required
 from .models import Company
+from employee.models import Employee
 from decorator.check_permissions import check_permissions
 
 @login_required
@@ -37,5 +38,6 @@ def delete_company(request, company_id):
 @login_required
 def company_page(request, company_id):
     company = Company.objects.get(id=company_id)
-    return render(request, 'pages/company_page.html', {'company': company})
+    employees = Employee.objects.filter(company=company, delete=False)
+    return render(request, 'pages/company_page.html', {'company': company, 'employees': employees})
 
