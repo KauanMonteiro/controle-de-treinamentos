@@ -510,7 +510,24 @@ body {
   color: var(--primary-dark);
   text-decoration: underline;
 }
-
+/* Botão cancelar */
+.btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background: var(--bg-soft);
+  color: var(--text-dark);
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition);
+}
+.btn-cancel:hover {
+  background: #d1cdb7;
+  transform: translateY(-2px);
+}
 /* ============================================
    RESPONSIVIDADE
    ============================================ */
