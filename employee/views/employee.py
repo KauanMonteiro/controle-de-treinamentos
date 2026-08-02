@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from ..forms import EmployeeForm
 from ..models import Employee
 from decorator import check_permissions
-from training.models import TrainingRegister
+from training.models import TrainingRegister,TrainingDoc
 
 @check_permissions('cadastros')
 def register_employee(request):
@@ -58,7 +58,7 @@ def delete_employee(request, employee_id):
 def employee_detail(request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
     trainings = employee.role.trainings.all()  # Tipos de treinamento do cargo
-
+ 
     # Para cada tipo de treinamento, busca o registro do funcionário (se existir)
     trainings_with_registers = []
     for training in trainings:
@@ -71,9 +71,19 @@ def employee_detail(request, employee_id):
             'training': training,
             'register': register,
         })
-
+ 
+    # Documento do funcionário (não é por tipo de treinamento — ver ressalva
+    # de design na resposta). Pega o mais recente não deletado.
+    training_doc = TrainingDoc.objects.filter(
+        employee=employee,
+        delete=False
+    ).order_by('-id').first()
+ 
     context = {
         'employee': employee,
         'trainings_with_registers': trainings_with_registers,
+        'training_doc': training_doc,
     }
     return render(request, 'pages/employee_detail.html', context)
+ 
+

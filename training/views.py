@@ -1,14 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.http import HttpResponse
 from company.models import Company
 from employee.models import Employee
-
-from .forms import TrainingRegisterForm, TrainingTypeForm
-from .models import TrainingRegister, TrainingType
-
-
+from .forms import TrainingRegisterForm, TrainingTypeForm, TrainingDocForm
+from .models import TrainingRegister, TrainingType, TrainingDoc
+import mimetypes
+from django.views.decorators.clickjacking import xframe_options_exempt
+from django.http import FileResponse
 @login_required
 def home(request):
     companies = Company.objects.filter(delete=False)
@@ -69,7 +69,6 @@ def training_register_create(request, employee_id, training_type_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     training_type = get_object_or_404(TrainingType, pk=training_type_id, delete=False)
 
-    # Verifica se já existe um treinamento para este funcionário e tipo
     existing_training = TrainingRegister.objects.filter(
         employee=employee,
         training_type=training_type,
@@ -81,10 +80,8 @@ def training_register_create(request, employee_id, training_type_id):
             request,
             'Já existe um treinamento registrado para este funcionário e tipo. Redirecionando para edição.'
         )
-        # Redireciona para a view de edição (que usará o registro mais recente)
         return redirect('edit_training', employee_id=employee.id, training_type_id=training_type.id)
 
-    # Se não existir, prossegue com a criação
     if request.method == 'POST':
         form = TrainingRegisterForm(
             request.POST,
@@ -114,19 +111,18 @@ def training_register_create(request, employee_id, training_type_id):
         {'form': form, 'employee': employee, 'training_type': training_type}
     )
 
+
 @login_required
 def edit_training(request, employee_id, training_type_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     training_type = get_object_or_404(TrainingType, pk=training_type_id, delete=False)
 
-    # Busca o primeiro registro (evita DoesNotExist se não houver nenhum)
     training = TrainingRegister.objects.filter(
         employee=employee,
         training_type=training_type,
         delete=False
     ).first()
 
-    # Se não existir, redireciona para a criação (ou exibe erro)
     if not training:
         messages.warning(
             request,
@@ -134,7 +130,6 @@ def edit_training(request, employee_id, training_type_id):
         )
         return redirect('training_register_create', employee_id=employee.id, training_type_id=training_type.id)
 
-    # Se existir, prossegue com a edição
     if request.method == 'POST':
         form = TrainingRegisterForm(
             request.POST,
@@ -178,3 +173,69 @@ def delete_training(request, employee_id, training_type_id):
     training.save()
     messages.success(request, 'Treinamento excluído com sucesso.')
     return redirect('employee:employee_detail', employee_id=employee.id)
+
+
+@login_required
+def upload_training_doc(request, employee_id):
+    employee = get_object_or_404(Employee, pk=employee_id)
+
+    if request.method == 'POST':
+        form = TrainingDocForm(request.POST, request.FILES)
+        if form.is_valid():
+            training_doc = form.save(commit=False)
+            training_doc.employee = employee
+            training_doc.created_by = request.user
+            training_doc.save()
+            messages.success(request, 'Documento de treinamento enviado com sucesso.')
+            return redirect('employee:employee_detail', employee_id=employee.id)
+        messages.error(request, 'Corrija os erros abaixo.')
+    else:
+        form = TrainingDocForm()
+
+    return render(
+        request,
+        'pages/register_form.html',
+        {'form': form, 'employee': employee}
+    )
+
+
+@login_required
+def view_training_docs(request, employee_id):
+    employee = get_object_or_404(Employee, pk=employee_id)
+    training_docs = TrainingDoc.objects.filter(employee=employee, delete=False)
+
+    return render(
+        request,
+        'pages/training_docs_view.html',
+        {'employee': employee, 'training_docs': training_docs}
+    )
+
+
+@login_required
+def download_training_doc(request, doc_id):
+    # CORRIGIDO: get_object_or_404 já retorna a instância certa;
+    # não existe .filter() em cima dela (isso quebrava toda vez que era chamado).
+    training_doc = get_object_or_404(TrainingDoc, pk=doc_id, delete=False)
+    file_path = training_doc.docs.path
+
+    with open(file_path, 'rb') as f:
+        response = HttpResponse(f.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'attachment; filename="{training_doc.docs.name}"'
+        return response
+
+
+@xframe_options_exempt
+@login_required
+def preview_training_doc(request, doc_id):
+    training_doc = get_object_or_404(TrainingDoc, pk=doc_id, delete=False)
+
+    content_type, _ = mimetypes.guess_type(training_doc.docs.name)
+    content_type = content_type or 'application/octet-stream'
+
+    response = FileResponse(
+        training_doc.docs.open('rb'),
+        content_type=content_type,
+        filename=training_doc.docs.name,
+    )
+    response['Content-Disposition'] = f'inline; filename="{training_doc.docs.name}"'
+    return response

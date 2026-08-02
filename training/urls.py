@@ -35,4 +35,22 @@ urlpatterns = [
         views.delete_training,
         name='delete_training',
     ),
+    path(
+        'employee/<int:employee_id>/upload-doc/',
+        views.upload_training_doc,
+        name='upload_training_doc',
+    ),
+
+    path(
+        'training-doc/<int:doc_id>/download/',
+        views.download_training_doc,
+        name='download_training_doc',
+    ),
+
+    # Preview inline do documento, usado pelo <iframe> em employee_detail.html
+    path(
+        'training-doc/<int:doc_id>/preview/',
+        views.preview_training_doc,
+        name='preview_training_doc',
+    ),
 ]
