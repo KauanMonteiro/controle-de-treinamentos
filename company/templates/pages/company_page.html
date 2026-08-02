@@ -51,7 +51,7 @@
                     <a href="{% url 'employee:edit_employee' employee.id %}" class="edit" title="Editar">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a href="" class="view" title="Ver mais">
+                    <a href="{% url "employee:employee_detail" employee.id %}" class="view" title="Ver mais">
                       <i class="fas fa-eye"></i>
                     </a>
                     <a href="{% url 'employee:delete_employee' employee.id %}" class="delete" title="Excluir">

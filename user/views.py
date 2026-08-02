@@ -1,6 +1,7 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,reverse
 from .forms import UserRegisterForm
 from django.contrib.auth import authenticate, login
+from decorator import check_permissions
 
 def login_view(request):
     if request.method == "POST":
@@ -20,8 +21,10 @@ def login_view(request):
     return render(request, 'pages/login.html')
 
 def logout_view(request):
-    pass
+    request.session.flush()
+    return redirect(reverse('home'))
 
+@check_permissions('cadastros')
 def register_view(request):
     form = UserRegisterForm(request.POST or None)
     if request.method == 'POST':

@@ -1,0 +1,61 @@
+{% include 'partials/head.html' %}
+<body>
+{% include 'partials/header.html' %}
+
+<main class="page-main">
+<div class="django-form">
+{% block form_content %}
+
+    <h2>Registrar Treinamento</h2>
+    <p class="help-text">
+        Funcionário: <strong>{{ employee.name }}</strong> &middot;
+        Treinamento: <strong>{{ training_type.name }}</strong>
+    </p>
+
+    <form method="post" enctype="multipart/form-data" class="django-form" novalidate>
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        {{ field.label_tag }}
+        {{ field }}
+
+        {% if field.help_text %}
+        <div class="help-text">{{ field.help_text }}</div>
+        {% endif %}
+
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+        <a href="{% url 'employee:employee_detail' employee_id=employee.id %}" class="btn-cancel">Cancelar</a>
+        <button type="submit" class="btn-submit">Salvar</button>
+    </div>
+    </form>
+
+{% endblock %}
+</div>
+</main>
+
+{% include 'partials/footer.html' %}
+</body>
+<!-- Mantenha o campo com classe datepicker -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('.datepicker');
+    inputs.forEach(input => {
+      input.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length > 8) value = value.slice(0, 8);
+        if (value.length >= 3) {
+          value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        if (value.length >= 6) {
+          value = value.slice(0, 5) + '/' + value.slice(5);
+        }
+        this.value = value;
+      });
+    });
+  });
+</script>

@@ -1,0 +1,70 @@
+{% include 'partials/head.html' %}
+<body>
+{% include 'partials/header.html' %}
+
+<main class="page-main">
+<div class="page-list">
+
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h2>Tipos de Treinamento</h2>
+            <a href="{% url 'register_training_type' %}" class="btn-submit">
+                <i class="fa fas fa-plus"></i> Adicionar
+            </a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Código</th>
+                    <th>Revisão</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for training in trainings %}
+                <tr>
+                    <td data-label="Nome">{{ training.name }}</td>
+                    <td data-label="Código">{{ training.codigo|default:"—" }}</td>
+                    <td data-label="Revisão">{{ training.revision }}</td>
+                    <td data-label="Ações">
+                        <div class="actions">
+                            <a href="{% url 'edit_training_type' training_type_id=training.pk %}" class="edit" title="Editar">
+                                <i class="fa fas fa-pen"></i>
+                            </a>
+                            <a href="{% url 'delete_training_type' training_type_id=training.pk %}"
+                               class="delete"
+                               title="Excluir"
+                               onclick="return confirm('Tem certeza que deseja excluir este tipo de treinamento?');">
+                                <i class="fa fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center; padding: 2rem;">
+                        Nenhum tipo de treinamento cadastrado.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+<script>
+    document.getElementById('search-training-type').addEventListener('input', function () {
+        const term = this.value.toLowerCase();
+        document.querySelectorAll('.table-wrapper tbody tr').forEach(function (row) {
+            row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+        });
+    });
+</script>
+</body>
+</html>

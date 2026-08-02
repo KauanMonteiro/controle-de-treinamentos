@@ -1,22 +1,39 @@
 /* ============================================
-   VARIÁVEIS GLOBAIS
+   VARIÁVEIS GLOBAIS — paleta vibrante/moderna
    ============================================ */
 :root {
-  --primary: #0fa1d6;
-  --primary-dark: #048ca1;
-  --secondary: #60a4a2;
-  --bg-soft: #dddac7;
-  --bg-body: #f8f7f2;
+  --color1: #0692d1;
+  --color2: #61c2e8;
+  --color3: #043078;
+  --color4: #6487a8;
+  --color5: #b7bacf;
+
+  --primary: var(--color1);
+  --primary-light: var(--color2);
+  --primary-dark: var(--color3);
+  --secondary: var(--color4);
+  --secondary-dark: var(--color3);
+  --accent: var(--color2);
+  --accent-dark: var(--color3);
+
+  /* Gradiente suave, com predominância da cor original (color1) */
+  --gradient-primary: linear-gradient(135deg, #0692d1 0%, #0692d1 65%, #61c2e8 100%);
+  --gradient-secondary: linear-gradient(135deg, #6487a8 0%, #61c2e8 100%);
+  --gradient-bg: linear-gradient(160deg, #f5f9fc 0%, #f0f6fa 45%, #eef7fb 100%);
+
+  --bg-soft: #e8f2f9;
+  --bg-body: #f7fafc;
   --white: #ffffff;
-  --text-dark: #2c3e50;
-  --gray: #b0b0b0;
-  --danger: #e74c3c;
-  --success: #27ae60;
+  --text-dark: #1e2a3a;
+  --gray: #b7bacf;
+  --danger: #f43f5e;
+  --success: #10b981;
 
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --radius: 8px;
-  --shadow-focus: 0 0 0 4px rgba(15, 161, 214, 0.15);
-  --transition: 0.2s ease;
+  --radius: 12px;
+  --shadow-focus: 0 0 0 4px rgba(6, 146, 209, 0.15);
+  --shadow-glow: 0 6px 18px rgba(6, 146, 209, 0.18);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================
@@ -29,12 +46,29 @@
 }
 
 body {
-  background: var(--bg-body);
+  background: var(--gradient-bg);
+  background-attachment: fixed;
   font-family: var(--font);
   color: var(--text-dark);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ============================================
@@ -43,8 +77,10 @@ body {
 .page-header {
   background: var(--white);
   padding: 1.5rem 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border-bottom: 2px solid var(--bg-soft);
+  box-shadow: 0 2px 16px rgba(6, 146, 209, 0.06);
+  border-bottom: 3px solid transparent;
+  border-image: var(--gradient-primary) 1;
+  animation: fadeIn 0.4s ease;
 }
 .page-header .container {
   max-width: 1200px;
@@ -54,13 +90,16 @@ body {
   align-items: center;
 }
 .page-header h1 {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 700;
   color: var(--text-dark);
   letter-spacing: -0.01em;
 }
 .page-header h1 span {
-  color: var(--primary);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .page-header .subtitle {
   font-size: 0.875rem;
@@ -82,8 +121,11 @@ body {
 .page-footer a {
   color: var(--primary);
   text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition);
 }
 .page-footer a:hover {
+  color: var(--accent-dark);
   text-decoration: underline;
 }
 
@@ -93,26 +135,27 @@ body {
 .django-form {
   max-width: 640px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1.75rem;
   background: var(--white);
   border-radius: var(--radius);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 30px rgba(6, 146, 209, 0.08);
   font-family: var(--font);
   color: var(--text-dark);
+  animation: fadeInUp 0.4s ease;
 }
 .django-form .form-group {
   margin-bottom: 1.5rem;
 }
 .django-form label {
   display: block;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.875rem;
   letter-spacing: 0.02em;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
   color: var(--text-dark);
 }
 .django-form label .required {
-  color: var(--danger);
+  color: var(--accent-dark);
   margin-left: 2px;
 }
 .django-form input,
@@ -125,9 +168,14 @@ body {
   background: var(--bg-soft);
   border: 1.5px solid transparent;
   border-radius: var(--radius);
-  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition), transform var(--transition);
   color: var(--text-dark);
   box-sizing: border-box;
+}
+.django-form input:hover,
+.django-form textarea:hover,
+.django-form select:hover {
+  background: #dcedf6;
 }
 .django-form input:focus,
 .django-form textarea:focus,
@@ -136,6 +184,7 @@ body {
   background: var(--white);
   border-color: var(--primary);
   box-shadow: var(--shadow-focus);
+  transform: translateY(-1px);
 }
 .django-form textarea {
   resize: vertical;
@@ -143,7 +192,7 @@ body {
 }
 .django-form select:not([multiple]) {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2360a4a2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237c3aed' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   padding-right: 2.5rem;
@@ -170,6 +219,11 @@ body {
   font-size: 0.95rem;
   margin-bottom: 0;
   cursor: pointer;
+  transition: color var(--transition);
+}
+.django-form .checkbox-group label:hover,
+.django-form .radio-group label:hover {
+  color: var(--primary);
 }
 .django-form input[type="checkbox"],
 .django-form input[type="radio"] {
@@ -182,12 +236,14 @@ body {
 .django-form input[type="file"] {
   padding: 0.6rem;
   background: var(--bg-soft);
-  border: 1.5px dashed var(--gray);
+  border: 1.5px dashed var(--primary-light);
   border-radius: var(--radius);
   cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
 }
 .django-form input[type="file"]:hover {
   border-color: var(--secondary);
+  background: #dcedf6;
 }
 .django-form input[type="range"] {
   width: 100%;
@@ -200,7 +256,7 @@ body {
   width: 60px;
   height: 60px;
   padding: 0.25rem;
-  border: 1.5px solid var(--gray);
+  border: 1.5px solid var(--primary-light);
   border-radius: var(--radius);
   cursor: pointer;
   background: var(--white);
@@ -217,7 +273,8 @@ body {
   margin: 0.25rem 0 0 0;
   color: var(--danger);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
+  animation: fadeIn 0.2s ease;
 }
 .django-form .errorlist li {
   margin-bottom: 2px;
@@ -226,12 +283,12 @@ body {
 .django-form .has-error textarea,
 .django-form .has-error select {
   border-color: var(--danger);
-  background: #fff5f5;
+  background: #fff1f2;
 }
 .django-form .has-error input:focus,
 .django-form .has-error textarea:focus,
 .django-form .has-error select:focus {
-  box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.15);
+  box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.18);
 }
 .django-form .form-actions {
   margin-top: 2rem;
@@ -240,24 +297,25 @@ body {
   gap: 0.75rem;
 }
 .django-form .btn-submit {
-  background: var(--primary);
+  background: var(--gradient-primary);
+  background-size: 200% auto;
   color: var(--white);
   border: none;
   padding: 0.75rem 2.5rem;
   border-radius: 50px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
-  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-  box-shadow: 0 4px 12px rgba(15, 161, 214, 0.25);
+  transition: background-position var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: var(--shadow-glow);
 }
 .django-form .btn-submit:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15, 161, 214, 0.3);
+  background-position: right center;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(6, 146, 209, 0.22);
 }
 .django-form .btn-submit:active {
-  transform: scale(0.97);
+  transform: translateY(-1px) scale(0.97);
 }
 .btn-cancel {
   display: inline-flex;
@@ -267,15 +325,84 @@ body {
   background: var(--bg-soft);
   color: var(--text-dark);
   border-radius: 50px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1rem;
   text-decoration: none;
   border: none;
-  transition: background var(--transition), transform var(--transition);
+  transition: background var(--transition), transform var(--transition), color var(--transition);
 }
 .btn-cancel:hover {
-  background: #d1cdb7;
-  transform: translateY(-2px);
+  background: #d6e6f0;
+  color: var(--primary-dark);
+  transform: translateY(-3px);
+}
+
+/* ============================================
+   MAIN (wrapper de conteúdo entre header e footer)
+   ============================================ */
+.page-main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   TABELA DE TREINAMENTOS — linha clicável
+   com detalhes expansíveis
+   ============================================ */
+.training-row {
+  cursor: pointer;
+}
+.training-toggle-icon {
+  margin-right: 0.6rem;
+  font-size: 0.75rem;
+  color: var(--gray);
+  transition: transform var(--transition), color var(--transition);
+  display: inline-block;
+}
+.training-row.is-open .training-toggle-icon {
+  transform: rotate(90deg);
+  color: var(--primary);
+}
+.training-row.is-open {
+  background: var(--bg-soft);
+}
+
+.training-detail-row {
+  display: none;
+}
+.training-detail-row.show {
+  display: table-row;
+  animation: fadeIn 0.25s ease;
+}
+.training-detail-row td {
+  background: var(--bg-soft);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--bg-soft);
+}
+
+.training-detail-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem 1.5rem;
+}
+.training-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.training-detail-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gray);
+  font-weight: 700;
+}
+.training-detail-value {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  font-weight: 500;
 }
 
 /* ============================================
@@ -286,6 +413,7 @@ body {
   margin: 0 auto;
   padding: 2rem 1.5rem;
   width: 100%;
+  animation: fadeIn 0.4s ease;
 }
 
 /* Barra de busca (linha única) */
@@ -302,11 +430,12 @@ body {
   padding: 0.75rem 1rem 0.75rem 3rem;
   font-size: 1rem;
   font-family: var(--font);
-  background: var(--bg-soft);
-  border: 1.5px solid transparent;
+  background: var(--white);
+  border: 1.5px solid var(--bg-soft);
   border-radius: 50px;
   transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
   color: var(--text-dark);
+  box-shadow: 0 2px 10px rgba(6, 146, 209, 0.05);
 }
 .search-bar input::placeholder {
   color: var(--gray);
@@ -322,7 +451,7 @@ body {
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--gray);
+  color: var(--primary);
   font-size: 1.1rem;
 }
 
@@ -344,19 +473,20 @@ body {
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1.2rem;
-  background: var(--primary);
+  background: var(--gradient-primary);
+  background-size: 200% auto;
   color: var(--white);
   border-radius: 50px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
-  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-  box-shadow: 0 2px 8px rgba(15, 161, 214, 0.2);
+  transition: background-position var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 14px rgba(6, 146, 209, 0.16);
 }
 .action-buttons a:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(15, 161, 214, 0.3);
+  background-position: right center;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(6, 146, 209, 0.22);
 }
 .action-buttons a i {
   font-size: 0.9rem;
@@ -369,17 +499,20 @@ body {
   background: var(--white);
   padding: 1.5rem 2rem;
   border-radius: var(--radius);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 26px rgba(6, 146, 209, 0.08);
   margin-bottom: 2rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  border-left: 4px solid transparent;
+  border-image: var(--gradient-primary) 1;
+  animation: fadeInUp 0.4s ease;
 }
 .company-header .info h1 {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-dark);
   margin-bottom: 0.25rem;
 }
@@ -406,8 +539,9 @@ body {
 .table-wrapper {
   background: var(--white);
   border-radius: var(--radius);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 26px rgba(6, 146, 209, 0.08);
   overflow-x: auto;
+  animation: fadeInUp 0.45s ease;
 }
 .table-wrapper table {
   width: 100%;
@@ -415,24 +549,25 @@ body {
   font-size: 0.95rem;
 }
 .table-wrapper table thead {
-  background: var(--bg-soft);
-  border-bottom: 2px solid var(--primary);
+  background: var(--gradient-primary);
+  border-bottom: none;
 }
 .table-wrapper table thead th {
   padding: 1rem 1.2rem;
   text-align: left;
-  font-weight: 600;
-  color: var(--text-dark);
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
 }
 .table-wrapper table tbody tr {
   border-bottom: 1px solid var(--bg-soft);
-  transition: background var(--transition);
+  transition: background var(--transition), transform var(--transition);
 }
 .table-wrapper table tbody tr:hover {
-  background: #faf9f5;
+  background: linear-gradient(90deg, #f5f3ff 0%, #ecfeff 100%);
+  transform: scale(1.005);
 }
 .table-wrapper table tbody td {
   padding: 1rem 1.2rem;
@@ -463,16 +598,31 @@ body {
 }
 .table-wrapper table .actions a:hover {
   background: var(--bg-soft);
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(-4deg);
 }
 .table-wrapper table .actions a.edit:hover {
   color: var(--primary);
+  background: #dcedf6;
 }
 .table-wrapper table .actions a.view:hover {
-  color: var(--secondary);
+  color: var(--secondary-dark);
+  background: #e0eef5;
 }
 .table-wrapper table .actions a.delete:hover {
   color: var(--danger);
+  background: #ffe4e6;
+}
+
+/* Link de texto dentro da célula (ex: nome do treinamento levando ao detalhe) */
+.table-wrapper table tbody td a:not(.edit):not(.view):not(.delete) {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition);
+}
+.table-wrapper table tbody td a:not(.edit):not(.view):not(.delete):hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
 }
 
 /* ============================================
@@ -488,7 +638,7 @@ body {
 }
 .table-header h2 {
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-dark);
 }
 .table-header .btn-submit {
@@ -496,21 +646,20 @@ body {
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1.2rem;
-  background: var(--secondary);
+  background: var(--gradient-secondary);
   color: var(--white);
   border: none;
   border-radius: 50px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
   cursor: pointer;
-  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-  box-shadow: 0 2px 8px rgba(96, 164, 162, 0.2);
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 6px 18px rgba(100, 135, 168, 0.22);
 }
 .table-header .btn-submit:hover {
-  background: #4d8a88;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(96, 164, 162, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(100, 135, 168, 0.28);
 }
 .table-header .btn-submit i {
   font-size: 0.9rem;
@@ -530,18 +679,25 @@ body {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
+  animation: fadeInUp 0.5s ease;
 }
 .login-box {
   background: var(--white);
-  padding: 2rem 2rem 1.5rem;
+  padding: 2.25rem 2rem 1.75rem;
   border-radius: var(--radius);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 16px 40px rgba(6, 146, 209, 0.12);
+  border-top: 4px solid transparent;
+  border-image: var(--gradient-primary) 1;
 }
 .login-box h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 700;
   margin-bottom: 0.25rem;
-  color: var(--text-dark);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
 }
 .login-subtitle {
   color: var(--gray);
@@ -553,7 +709,7 @@ body {
 }
 .login-form label {
   display: block;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.875rem;
   margin-bottom: 0.25rem;
   color: var(--text-dark);
@@ -566,15 +722,19 @@ body {
   background: var(--bg-soft);
   border: 1.5px solid transparent;
   border-radius: var(--radius);
-  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition), transform var(--transition);
   color: var(--text-dark);
   box-sizing: border-box;
+}
+.login-form input:hover {
+  background: #dcedf6;
 }
 .login-form input:focus {
   outline: none;
   background: var(--white);
   border-color: var(--primary);
   box-shadow: var(--shadow-focus);
+  transform: translateY(-1px);
 }
 .login-form .form-actions {
   margin-top: 1.5rem;
@@ -589,8 +749,9 @@ body {
   margin: 1rem 0 0 0;
   color: var(--danger);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   text-align: center;
+  animation: fadeIn 0.2s ease;
 }
 .login-footer {
   margin-top: 1.5rem;
@@ -600,10 +761,11 @@ body {
 .login-footer a {
   color: var(--primary);
   text-decoration: none;
+  font-weight: 600;
   transition: color var(--transition);
 }
 .login-footer a:hover {
-  color: var(--primary-dark);
+  color: var(--accent-dark);
   text-decoration: underline;
 }
 
@@ -669,6 +831,23 @@ body {
     padding: 1rem;
     background: var(--white);
   }
+  .table-wrapper table tbody tr:hover {
+    transform: none;
+  }
+  .table-wrapper table tbody tr.training-detail-row {
+    display: none;
+    border: none;
+    padding: 0;
+    margin-bottom: 0.75rem;
+    background: transparent;
+  }
+  .table-wrapper table tbody tr.training-detail-row.show {
+    display: block;
+  }
+  .table-wrapper table tbody tr.training-detail-row td {
+    display: block;
+    border-bottom: none;
+  }
   .table-wrapper table tbody td {
     display: flex;
     justify-content: space-between;
@@ -704,5 +883,16 @@ body {
   }
   .page-header .subtitle {
     font-size: 0.75rem;
+  }
+  .login-box {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }

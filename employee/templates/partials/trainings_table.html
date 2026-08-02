@@ -1,0 +1,104 @@
+<div class="table-wrapper">
+    <div class="table-header">
+        <h2>Treinamentos</h2>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Treinamento</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in trainings_with_registers %}
+            {% if item.register %}
+            <tr class="training-row" data-target="training-detail-{{ item.training.id }}">
+                <td data-label="Treinamento">
+                    <i class="fas fa-chevron-right training-toggle-icon"></i>
+                    {{ item.training.name }}
+                </td>
+                <td data-label="Ações">
+                    <div class="actions">
+                        <a href="{% url 'edit_training' employee_id=employee.id training_type_id=item.training.id %}"
+                           class="edit" title="Editar registro" onclick="event.stopPropagation();">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'delete_training' employee_id=employee.id training_type_id=item.training.id %}"
+                           class="delete"
+                           title="Excluir registro"
+                           onclick="event.stopPropagation(); return confirm('Tem certeza que deseja excluir este registro de treinamento?');">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <tr class="training-detail-row" id="training-detail-{{ item.training.id }}">
+                <td colspan="2">
+                    <div class="training-detail-content">
+                        <div class="training-detail-item">
+                            <span class="training-detail-label">Eficácia</span>
+                            <span class="training-detail-value">{{ item.register.get_effectiveness_display }}</span>
+                        </div>
+                        <div class="training-detail-item">
+                            <span class="training-detail-label">Data de Aplicação</span>
+                            <span class="training-detail-value">{{ item.register.aplication_data_training }}</span>
+                        </div>
+                        <div class="training-detail-item">
+                            <span class="training-detail-label">Instrutor</span>
+                            <span class="training-detail-value">{{ item.register.instructor }}</span>
+                        </div>
+                        <div class="training-detail-item">
+                            <span class="training-detail-label">Avaliador</span>
+                            <span class="training-detail-value">{{ item.register.evaluator }}</span>
+                        </div>
+                        <div class="training-detail-item">
+                            <span class="training-detail-label">Data de Avaliação</span>
+                            <span class="training-detail-value">{{ item.register.avaling_data_training }}</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td data-label="Treinamento">{{ item.training.name }}</td>
+                <td data-label="Ações">
+                    <div class="actions">
+                        <a href="{% url 'training_register_create' employee_id=employee.id training_type_id=item.training.id %}"
+                           class="view" title="Registrar treinamento">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endif %}
+            {% empty %}
+            <tr>
+                <td colspan="2" style="text-align:center; padding: 2rem;">
+                    Nenhum treinamento associado a este cargo.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.querySelectorAll('.training-row').forEach(function (row) {
+    row.addEventListener('click', function () {
+        const detailRow = document.getElementById(row.getAttribute('data-target'));
+        const isOpen = row.classList.contains('is-open');
+
+        // fecha qualquer outra linha aberta antes de abrir a nova
+        document.querySelectorAll('.training-row.is-open').forEach(function (openRow) {
+            if (openRow !== row) {
+                openRow.classList.remove('is-open');
+                document.getElementById(openRow.getAttribute('data-target')).classList.remove('show');
+            }
+        });
+
+        row.classList.toggle('is-open', !isOpen);
+        detailRow.classList.toggle('show', !isOpen);
+    });
+});
+</script>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+{% include 'partials/head.html' %}
+<body>
+{% include 'partials/header.html' %}
+
+<main class="page-main">
+<div class="page-list">
+
+    <div class="company-header">
+        <div class="info">
+            <h1>{{ employee.name }}</h1>
+            <span>{{ employee.role }}</span>
+        </div>
+        <div class="actions">
+            <a href="" class="btn-submit">
+                <i class="fas fa-upload"></i> Enviar Documento
+            </a>
+        </div>
+    </div>
+
+    {% include 'partials/trainings_table.html' %}
+
+</div>
+</main>
+
+{% include 'partials/footer.html' %}
+</body>
+</html>

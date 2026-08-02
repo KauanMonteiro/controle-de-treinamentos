@@ -1,4 +1,5 @@
 from django.db import models
+from training.models import TrainingType
 
 class Department(models.Model):
     name = models.CharField(max_length=100,verbose_name='Nome do Departamento')
@@ -12,6 +13,7 @@ class Department(models.Model):
 class Role(models.Model):
     name = models.CharField(max_length=100,verbose_name='Nome da Função')
     department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name='Departamento')
+    trainings = models.ManyToManyField(TrainingType, verbose_name='Treinamentos')
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey('user.User', on_delete=models.CASCADE)
     delete = models.BooleanField(default=False)

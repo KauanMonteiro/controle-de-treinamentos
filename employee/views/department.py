@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from ..forms import DepartmentForm
 from ..models import Department
+from decorator import check_permissions
 
-
+@check_permissions('cadastros')
 def register_department(request):
     form = DepartmentForm(request.POST or None, user=request.user)
 
@@ -12,7 +13,7 @@ def register_department(request):
 
     return render(request, 'pages/register_form.html', {'form': form})
 
-
+@check_permissions('editar')
 def edit_department(request, department_id):
     department = get_object_or_404(Department, id=department_id)
 
@@ -28,7 +29,7 @@ def edit_department(request, department_id):
 
     return render(request, 'pages/register_form.html', {'form': form})
 
-
+@check_permissions('excluir')
 def delete_department(request, department_id):
     department = get_object_or_404(Department, id=department_id)
     department.delete = True

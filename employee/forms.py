@@ -28,7 +28,7 @@ class DepartmentForm(ModelForm):
 class RoleForm(ModelForm):
     class Meta:
         model = Role
-        fields = ['name', 'department']
+        fields = ['name', 'department', 'trainings']
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -38,10 +38,13 @@ class RoleForm(ModelForm):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
         department = cleaned_data.get('department')
+        trainings = cleaned_data.get('trainings')
         if not name:
             self.add_error('name', 'Name is required.')
         if not department:
             self.add_error('department', 'Department is required.')
+        if not trainings:
+            self.add_error('trainings', 'At least one training is required.')
         return cleaned_data
 
     def save(self, commit=True):
@@ -49,6 +52,7 @@ class RoleForm(ModelForm):
         role.name = self.cleaned_data['name']
         role.department = self.cleaned_data['department']
         role.created_by = self.user
+        role.trainings.set(self.cleaned_data['trainings'])
         if commit:
             role.save()
         return role
