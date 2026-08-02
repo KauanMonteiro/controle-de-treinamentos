@@ -53,4 +53,7 @@ urlpatterns = [
         views.preview_training_doc,
         name='preview_training_doc',
     ),
+    path('employee/<int:employee_id>/registrar/', views.training_register_create_pdf, name='register_create'),
+    path('employee/<int:employee_id>/pdf/', views.training_register_pdf, name='register_pdf'),
+
 ]

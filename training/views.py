@@ -9,6 +9,10 @@ from .models import TrainingRegister, TrainingType, TrainingDoc
 import mimetypes
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.http import FileResponse
+from .forms import TrainingRegisterCreateForm
+from utils.utils import generate_training_register_pdf
+
+
 @login_required
 def home(request):
     companies = Company.objects.filter(delete=False)
@@ -238,4 +242,53 @@ def preview_training_doc(request, doc_id):
         filename=training_doc.docs.name,
     )
     response['Content-Disposition'] = f'inline; filename="{training_doc.docs.name}"'
+    return response
+
+
+
+ 
+ 
+ 
+@login_required
+def training_register_create_pdf(request, employee_id):
+    """
+    Tela de registro de treinamentos de um colaborador.
+    Mostra TODOS os TrainingType ativos como checkbox, com os treinamentos
+    do Role do colaborador já pré-marcados. Os campos de eficácia/datas/
+    instrutor/avaliador são compartilhados entre todos os treinamentos
+    marcados nesta submissão.
+    """
+    employee = get_object_or_404(Employee, pk=employee_id, delete=False)
+
+    if request.method == 'POST':
+        form = TrainingRegisterCreateForm(
+            request.POST, user=request.user, employee=employee
+        )
+        if form.is_valid():
+            registers = form.save()
+            messages.success(
+                request,
+                f'{len(registers)} treinamento(s) registrado(s) para {employee.name}.',
+            )
+            return redirect('register_pdf', employee_id=employee.id)
+    else:
+        form = TrainingRegisterCreateForm(user=request.user, employee=employee)
+
+    return render(request, 'pages/training_register_form.html', {
+        'form': form,
+        'employee': employee,
+    })
+
+
+@login_required
+def training_register_pdf(request, employee_id):
+    """
+    Gera e retorna o PDF (SGQ-FOR-017) com todos os treinamentos do colaborador.
+    """
+    employee = get_object_or_404(Employee, pk=employee_id, delete=False)
+    pdf_bytes = generate_training_register_pdf(employee)
+
+    filename = f'SGQ-FOR-017_{employee.name}.pdf'.replace(' ', '_')
+    response = HttpResponse(pdf_bytes, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{filename}"'
     return response

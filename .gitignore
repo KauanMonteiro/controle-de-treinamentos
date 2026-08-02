@@ -15,7 +15,7 @@ media/
 .env
 .env.*
 !.env.example
-
+training_docs
 # Virtual Environments (caso use localmente fora do Docker)
 .venv/
 venv/

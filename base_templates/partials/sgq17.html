@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>{{ doc_code }} - {{ employee.name }}</title>
+<style>
+    @page {
+        size: A4 portrait;
+        margin: 10mm 12mm;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Calibri', 'Arial', sans-serif;
+        color: #000000;
+        font-size: 10pt;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    td, th {
+        border: 1px solid #000000;
+        padding: 2px 5px;
+        vertical-align: middle;
+    }
+
+    /* ---------- Cabeçalho ---------- */
+    .header-table td {
+        vertical-align: middle;
+    }
+
+    .logo-cell {
+        width: 22%;
+        text-align: center;
+        padding: 6px;
+    }
+
+    .logo-cell img {
+        max-width: 100%;
+        max-height: 45px;
+    }
+
+    .title-cell {
+        width: 56%;
+        text-align: center;
+        font-weight: bold;
+        font-size: 13pt;
+    }
+
+    .code-cell {
+        width: 22%;
+        text-align: center;
+        font-weight: bold;
+        font-size: 11pt;
+    }
+
+    .code-cell .revision {
+        font-size: 9pt;
+        font-weight: bold;
+        border-top: 1px solid #000000;
+        display: block;
+        padding-top: 3px;
+        margin-top: 3px;
+    }
+
+    /* ---------- Barras de seção ---------- */
+    .section-bar {
+        background-color: #404040;
+        color: #ffffff;
+        text-align: center;
+        font-weight: bold;
+        font-size: 11pt;
+        padding: 5px;
+        border: 1px solid #000000;
+    }
+
+    .field-row td {
+        padding: 4px 6px;
+        font-size: 9.5pt;
+    }
+
+    .field-label {
+        font-weight: bold;
+    }
+
+    /* ---------- Tabela de treinamentos ---------- */
+    .group-header {
+        background-color: #404040;
+        color: #ffffff;
+        text-align: center;
+        font-weight: bold;
+        font-size: 10.5pt;
+    }
+
+    .col-header {
+        background-color: #595959;
+        color: #ffffff;
+        text-align: center;
+        font-weight: bold;
+        font-size: 8.5pt;
+        padding: 3px 5px;
+    }
+
+    .training-table td {
+        font-size: 7.8pt;
+        height: 15px;
+        line-height: 1.1;
+    }
+
+    .col-nome { width: 32%; text-align: left; }
+    .col-data { width: 12%; text-align: center; }
+    .col-instrutor { width: 18%; text-align: center; }
+    .col-resp { width: 13%; text-align: center; }
+    .col-eficacia { width: 15%; text-align: left; font-size: 7.3pt; }
+
+    .checkbox-line {
+        white-space: nowrap;
+    }
+
+    /* ---------- Assinatura ---------- */
+    .signature-wrap {
+        margin-top: 22px;
+        text-align: center;
+        font-size: 9.5pt;
+    }
+
+    .signature-line {
+        border-top: 1px solid #000000;
+        width: 260px;
+        margin: 0 auto 4px auto;
+    }
+</style>
+</head>
+<body>
+
+    <!-- CABEÇALHO -->
+    <table class="header-table">
+        <tr>
+            <td class="logo-cell">
+                {% if company.logo %}
+                    <img src="{{ company.logo.url }}" alt="{{ company.name }}">
+                {% else %}
+                    {{ company.name }}
+                {% endif %}
+            </td>
+            <td class="title-cell">REGISTRO DE TREINAMENTO E AVALIAÇÃO DE EFICÁCIA</td>
+            <td class="code-cell">
+                {{ doc_code }}
+                <span class="revision">{{ doc_revision }}</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- DADOS COLABORADOR -->
+    <table>
+        <tr>
+            <td class="section-bar" colspan="2">DADOS COLABORADOR</td>
+        </tr>
+        <tr class="field-row">
+            <td colspan="2"><span class="field-label">Colaborador:</span> {{ employee.name }}</td>
+        </tr>
+        <tr class="field-row">
+            <td colspan="2"><span class="field-label">Empresa:</span> {{ company.name }}</td>
+        </tr>
+    </table>
+
+    <!-- TABELA DE TREINAMENTOS -->
+    <table class="training-table">
+        <tr>
+            <td class="group-header" colspan="3">TREINAMENTO</td>
+            <td class="group-header" colspan="3">AVALIAÇÃO DE EFICÁCIA DO TREINAMENTO</td>
+        </tr>
+        <tr>
+            <td class="col-header col-nome">Nome do treinamento e revisão</td>
+            <td class="col-header col-data">Data</td>
+            <td class="col-header col-instrutor">Instrutor</td>
+            <td class="col-header col-resp">Resp.</td>
+            <td class="col-header col-data">Data</td>
+            <td class="col-header col-eficacia">Eficácia</td>
+        </tr>
+
+        {% for row in rows %}
+        <tr>
+            {% if row %}
+                <td class="col-nome">
+                    {{ row.training_type.name }}{% if row.training_type.revision %} (Rev. {{ row.training_type.revision }}){% endif %}
+                </td>
+                <td class="col-data">{{ row.aplication_data_training|date:"d/m/Y" }}</td>
+                <td class="col-instrutor">{{ row.instructor }}</td>
+                <td class="col-resp">{{ row.evaluator }}</td>
+                <td class="col-data">{{ row.avaling_data_training|date:"d/m/Y" }}</td>
+                <td class="col-eficacia">
+                    <span class="checkbox-line">({% if row.effectiveness == 'E' %}X{% else %} {% endif %}) Eficaz</span><br>
+                    <span class="checkbox-line">({% if row.effectiveness == 'I' %}X{% else %} {% endif %}) Não eficaz</span>
+                </td>
+            {% else %}
+                <td class="col-nome">&nbsp;</td>
+                <td class="col-data">&nbsp;</td>
+                <td class="col-instrutor">&nbsp;</td>
+                <td class="col-resp">&nbsp;</td>
+                <td class="col-data">&nbsp;</td>
+                <td class="col-eficacia">
+                    <span class="checkbox-line">(&nbsp;&nbsp;) Eficaz</span><br>
+                    <span class="checkbox-line">(&nbsp;&nbsp;) Não eficaz</span>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- ASSINATURA -->
+    <div class="signature-wrap" style="padding-top: 10px;">
+        <div class="signature-line"></div>
+        Assinatura do Colaborador
+    </div>
+
+</body>
+</html>

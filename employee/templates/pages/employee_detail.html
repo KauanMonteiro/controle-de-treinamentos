@@ -12,7 +12,7 @@
 <h1>{{ employee.name }}</h1>
 <span>{{ employee.role }}</span>
 </div>
-<div class="actions">
+<div class="actions django-form">
   {% if training_doc %}
     <a href="{% url 'preview_training_doc' doc_id=training_doc.id %}" target="_blank" rel="noopener" class="btn-cancel">
         <i class="fas fa-eye"></i> Ver documento
@@ -30,7 +30,31 @@
   {% endif %}
 </div>
 </div>
+  <div class="django-form" style="padding: 1.5rem; margin-bottom: 2rem; border: 1.5px solid var(--bg-soft); border-radius: var(--radius); background: var(--white);">
+        <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">Ficha de Treinamento</h2>
+    <p class="help-text" style="margin-bottom: 1.25rem;">
+        Gere o PDF (SGQ-FOR-017) para
+        <strong>{{ employee.name }}</strong>.
+    </p>
+ 
+    <div class="form-actions" style="justify-content: flex-start; margin-top: 0;">
+        <a href="{% url 'register_pdf' employee.id %}"
+           target="_blank"
+           class="btn-submit"
+           style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-file-pdf"></i>
+            Gerar PDF da Ficha
+        </a>
+ 
+        <a href="{% url 'register_create' employee.id %}"
+           class="btn-cancel"
+           style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-plus"></i>
+            Nova Ficha
+        </a>
+    </div>
 
+  </div>
 {% if training_doc %}
 <div class="table-wrapper" id="doc-preview" style="margin-bottom: 2rem;">
   <div class="table-header">

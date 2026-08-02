@@ -1,4 +1,4 @@
-from django.forms import ModelForm, DateField, TextInput
+from django.forms import ModelForm, DateField, TextInput, ModelMultipleChoiceField, CheckboxSelectMultiple, ChoiceField, Select, CharField, Form
 from .models import TrainingType, TrainingRegister, TrainingDoc
 
 class TrainingTypeForm(ModelForm):
@@ -88,3 +88,82 @@ class TrainingDocForm(ModelForm):
             self.add_error('docs', 'Documento is required.')
 
         return cleaned_data
+
+
+class TrainingRegisterCreateForm(Form):
+    training_types = ModelMultipleChoiceField(
+        queryset=TrainingType.objects.filter(delete=False).order_by('name'),
+        widget=CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+        label='Treinamentos realizados',
+    )
+    effectiveness = ChoiceField(
+        choices=TrainingRegister.effectiveness_choices,
+        label='Eficácia',
+        widget=Select(attrs={'class': 'form-control'}),
+    )
+    aplication_data_training = DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        widget=TextInput(attrs={'class': 'form-control datepicker', 'placeholder': 'dd/mm/aaaa'}),
+        label='Data de Aplicação do Treinamento',
+    )
+    instructor = CharField(
+        max_length=100,
+        label='Instrutor',
+        widget=TextInput(attrs={'class': 'form-control'}),
+    )
+    evaluator = CharField(
+        max_length=100,
+        label='Avaliador',
+        required=False,
+        widget=TextInput(attrs={'class': 'form-control'}),
+    )
+    avaling_data_training = DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        required=False,
+        widget=TextInput(attrs={'class': 'form-control datepicker', 'placeholder': 'dd/mm/aaaa'}),
+        label='Data de Avaliação do Treinamento',
+    )
+ 
+    def __init__(self, *args, user=None, employee=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.employee = employee
+ 
+        # Pré-seleciona os treinamentos vinculados ao Role do colaborador.
+        # No model Role, o M2M se chama `trainings` (não `training_types`).
+        if employee is not None:
+            role = getattr(employee, 'role', None)
+            trainings_field = getattr(role, 'trainings', None)
+            if trainings_field is not None:
+                preselected_ids = list(trainings_field.values_list('id', flat=True))
+                if not self.is_bound:
+                    self.fields['training_types'].initial = preselected_ids
+ 
+    def clean(self):
+        cleaned_data = super().clean()
+        if not cleaned_data.get('training_types'):
+            self.add_error('training_types', 'Selecione ao menos um treinamento.')
+        return cleaned_data
+ 
+    def save(self, commit=True):
+        """
+        Cria um TrainingRegister para cada TrainingType selecionado.
+        Retorna a lista de instâncias criadas.
+        """
+        registers = []
+        for training_type in self.cleaned_data['training_types']:
+            register = TrainingRegister(
+                training_type=training_type,
+                employee=self.employee,
+                effectiveness=self.cleaned_data['effectiveness'],
+                aplication_data_training=self.cleaned_data['aplication_data_training'],
+                instructor=self.cleaned_data['instructor'],
+                evaluator=self.cleaned_data['evaluator'],
+                avaling_data_training=self.cleaned_data['avaling_data_training'],
+                created_by=self.user,
+            )
+            if commit:
+                register.save()
+            registers.append(register)
+        return registers
+ 
