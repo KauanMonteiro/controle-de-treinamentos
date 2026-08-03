@@ -3,7 +3,7 @@ from ..forms import RoleForm
 from ..models import Role
 from decorator import check_permissions
 
-@check_permissions('cadastros')
+@check_permissions('cadastrar_cargo')
 def register_role(request):
     form = RoleForm(request.POST or None, user=request.user)
 
@@ -13,7 +13,7 @@ def register_role(request):
 
     return render(request, 'pages/register_form.html', {'form': form})
 
-@check_permissions('editar')
+@check_permissions('editar_cargo')
 def edit_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
 
@@ -29,7 +29,7 @@ def edit_role(request, role_id):
 
     return render(request, 'pages/register_form.html', {'form': form})
 
-@check_permissions('excluir')
+@check_permissions('excluir_cargo')
 def delete_role(request, role_id):
     role = get_object_or_404(Role, id=role_id)
 

@@ -1243,3 +1243,129 @@ body::before {
     animation: none !important;
   }
 }
+/* ============================================
+   MENSAGENS (alertas do Django)
+   ============================================ */
+.messages-wrapper {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft), 0 4px 16px rgba(4, 48, 120, 0.06);
+  border-left: 4px solid transparent;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.message-alert::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.message-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.message-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  flex: 1;
+}
+
+.message-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--gray);
+  opacity: 0.7;
+  transition: opacity var(--transition), background var(--transition), color var(--transition), transform var(--transition-bounce);
+}
+.message-close svg {
+  width: 14px;
+  height: 14px;
+}
+.message-close:hover {
+  opacity: 1;
+  background: var(--bg-soft);
+  color: var(--text-dark);
+  transform: rotate(90deg);
+}
+
+/* Variante: sucesso */
+.message-success {
+  border-left-color: var(--success);
+}
+.message-success::before {
+  background: linear-gradient(90deg, var(--success), transparent);
+}
+.message-success .message-icon {
+  color: var(--success);
+}
+
+/* Variante: erro */
+.message-error {
+  border-left-color: var(--danger);
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1), bounceIn 0.4s ease;
+}
+.message-error::before {
+  background: linear-gradient(90deg, var(--danger), transparent);
+}
+.message-error .message-icon {
+  color: var(--danger);
+}
+
+/* Variante: aviso */
+.message-warning {
+  border-left-color: #f59e0b;
+}
+.message-warning::before {
+  background: linear-gradient(90deg, #f59e0b, transparent);
+}
+.message-warning .message-icon {
+  color: #f59e0b;
+}
+
+/* Variante: info (padrão) */
+.message-info {
+  border-image: var(--gradient-primary) 1;
+  border-left: 4px solid var(--primary);
+}
+.message-info::before {
+  background: linear-gradient(90deg, var(--primary), transparent);
+}
+.message-info .message-icon {
+  color: var(--primary);
+}
+
+@media (max-width: 600px) {
+  .messages-wrapper {
+    padding: 0 1rem;
+  }
+  .message-alert {
+    padding: 0.85rem 1rem;
+  }
+}

@@ -94,76 +94,117 @@ class TrainingRegisterCreateForm(Form):
     training_types = ModelMultipleChoiceField(
         queryset=TrainingType.objects.filter(delete=False).order_by('name'),
         widget=CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
-        label='Treinamentos realizados',
+        label='Treinamentos',
     )
     effectiveness = ChoiceField(
         choices=TrainingRegister.effectiveness_choices,
-        label='Eficácia',
+        label='Eficácia (padrão)',
         widget=Select(attrs={'class': 'form-control'}),
-    )
-    aplication_data_training = DateField(
-        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
-        widget=TextInput(attrs={'class': 'form-control datepicker', 'placeholder': 'dd/mm/aaaa'}),
-        label='Data de Aplicação do Treinamento',
     )
     instructor = CharField(
         max_length=100,
-        label='Instrutor',
+        label='Instrutor (padrão)',
         widget=TextInput(attrs={'class': 'form-control'}),
     )
     evaluator = CharField(
         max_length=100,
-        label='Avaliador',
+        label='Avaliador (padrão)',
         required=False,
         widget=TextInput(attrs={'class': 'form-control'}),
+    )
+    aplication_data_training = DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        widget=TextInput(attrs={'class': 'form-control datepicker', 'placeholder': 'dd/mm/aaaa'}),
+        label='Data de Aplicação do Treinamento (padrão)',
     )
     avaling_data_training = DateField(
         input_formats=['%d/%m/%Y', '%Y-%m-%d'],
         required=False,
         widget=TextInput(attrs={'class': 'form-control datepicker', 'placeholder': 'dd/mm/aaaa'}),
-        label='Data de Avaliação do Treinamento',
+        label='Data de Avaliação do Treinamento (padrão)',
     )
- 
+
     def __init__(self, *args, user=None, employee=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
         self.employee = employee
- 
-        # Pré-seleciona os treinamentos vinculados ao Role do colaborador.
-        # No model Role, o M2M se chama `trainings` (não `training_types`).
-        if employee is not None:
+
+        # NÃO exclui mais os já registrados — eles aparecem também,
+        # só que em modo edição (condição tratada na view/template).
+        queryset = TrainingType.objects.filter(delete=False).order_by('name')
+        self.fields['training_types'].queryset = queryset
+
+        if employee is not None and not self.is_bound:
             role = getattr(employee, 'role', None)
             trainings_field = getattr(role, 'trainings', None)
+            already_registered_ids = set(
+                TrainingRegister.objects.filter(
+                    employee=employee, delete=False
+                ).values_list('training_type_id', flat=True)
+            )
+            preselected_ids = already_registered_ids.copy()
             if trainings_field is not None:
-                preselected_ids = list(trainings_field.values_list('id', flat=True))
-                if not self.is_bound:
-                    self.fields['training_types'].initial = preselected_ids
- 
+                preselected_ids |= set(trainings_field.values_list('id', flat=True))
+            self.fields['training_types'].initial = list(preselected_ids)
+
     def clean(self):
         cleaned_data = super().clean()
         if not cleaned_data.get('training_types'):
             self.add_error('training_types', 'Selecione ao menos um treinamento.')
         return cleaned_data
- 
-    def save(self, commit=True):
+
+    def save(self, overrides, commit=True):
         """
-        Cria um TrainingRegister para cada TrainingType selecionado.
-        Retorna a lista de instâncias criadas.
+        overrides: dict {training_type_id (int): {
+            'effectiveness': str or None,
+            'instructor': str or None,
+            'evaluator': str or None,
+            'aplication_data_training': date or None,
+            'avaling_data_training': date or None,
+        }}
+        Para cada training_type marcado:
+          - se já existir um TrainingRegister ativo para o funcionário -> ATUALIZA
+          - senão -> CRIA
         """
-        registers = []
+        results = []
+        existing_by_type = {
+            r.training_type_id: r
+            for r in TrainingRegister.objects.filter(employee=self.employee, delete=False)
+        }
+
         for training_type in self.cleaned_data['training_types']:
-            register = TrainingRegister(
-                training_type=training_type,
-                employee=self.employee,
-                effectiveness=self.cleaned_data['effectiveness'],
-                aplication_data_training=self.cleaned_data['aplication_data_training'],
-                instructor=self.cleaned_data['instructor'],
-                evaluator=self.cleaned_data['evaluator'],
-                avaling_data_training=self.cleaned_data['avaling_data_training'],
-                created_by=self.user,
-            )
+            row = overrides.get(training_type.id, {})
+
+            effectiveness = row.get('effectiveness') or self.cleaned_data['effectiveness']
+            instructor = row.get('instructor') or self.cleaned_data['instructor']
+            evaluator = row.get('evaluator') or self.cleaned_data.get('evaluator') or ''
+            aplication_date = row.get('aplication_data_training') or self.cleaned_data['aplication_data_training']
+            avaling_date = row.get('avaling_data_training') or self.cleaned_data.get('avaling_data_training')
+
+            register = existing_by_type.get(training_type.id)
+
+            if register:
+                # CONDIÇÃO: já existe -> edita o registro existente
+                register.effectiveness = effectiveness
+                register.instructor = instructor
+                register.evaluator = evaluator
+                register.aplication_data_training = aplication_date
+                register.avaling_data_training = avaling_date
+            else:
+                # CONDIÇÃO: não existe -> cria novo
+                register = TrainingRegister(
+                    training_type=training_type,
+                    employee=self.employee,
+                    effectiveness=effectiveness,
+                    aplication_data_training=aplication_date,
+                    instructor=instructor,
+                    evaluator=evaluator,
+                    avaling_data_training=avaling_date,
+                    created_by=self.user,
+                )
+
             if commit:
                 register.save()
-            registers.append(register)
-        return registers
+            results.append(register)
+        return results
  

@@ -6,7 +6,7 @@ from employee.models import Employee
 from decorator.check_permissions import check_permissions
 
 @login_required
-@check_permissions('cadastros')
+@check_permissions('cadastrar_empresa')
 def register_company(request):
     form = CompanyForm(request.POST or None,user=request.user)
 
@@ -17,7 +17,7 @@ def register_company(request):
     return render(request,'pages/register_form.html',{'form':form})
 
 @login_required
-@check_permissions('editar')
+@check_permissions('editar_empresa')
 def edit_company(request, company_id):
     company = Company.objects.get(id=company_id)
     form = CompanyForm(request.POST or None, instance=company, user=request.user)
@@ -28,7 +28,7 @@ def edit_company(request, company_id):
     return render(request,'pages/register_form.html',{'form':form})
 
 @login_required
-@check_permissions('excluir')
+@check_permissions('excluir_empresa')
 def delete_company(request, company_id):
     company = Company.objects.get(id=company_id)
     company.delete = True

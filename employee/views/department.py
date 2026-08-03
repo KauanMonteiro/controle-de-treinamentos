@@ -3,7 +3,7 @@ from ..forms import DepartmentForm
 from ..models import Department
 from decorator import check_permissions
 
-@check_permissions('cadastros')
+@check_permissions('cadastrar_departamento')
 def register_department(request):
     form = DepartmentForm(request.POST or None, user=request.user)
 
@@ -13,7 +13,7 @@ def register_department(request):
 
     return render(request, 'pages/register_form.html', {'form': form})
 
-@check_permissions('editar')
+@check_permissions('editar_departamento')
 def edit_department(request, department_id):
     department = get_object_or_404(Department, id=department_id)
 
@@ -29,7 +29,7 @@ def edit_department(request, department_id):
 
     return render(request, 'pages/register_form.html', {'form': form})
 
-@check_permissions('excluir')
+@check_permissions('excluir_departamento')
 def delete_department(request, department_id):
     department = get_object_or_404(Department, id=department_id)
     department.delete = True

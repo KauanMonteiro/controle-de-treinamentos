@@ -24,7 +24,7 @@ def logout_view(request):
     request.session.flush()
     return redirect(reverse('home'))
 
-@check_permissions('cadastros')
+@check_permissions('cadastrar_usuario')
 def register_view(request):
     form = UserRegisterForm(request.POST or None)
     if request.method == 'POST':

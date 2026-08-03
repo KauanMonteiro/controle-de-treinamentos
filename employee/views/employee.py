@@ -4,7 +4,7 @@ from ..models import Employee
 from decorator import check_permissions
 from training.models import TrainingRegister,TrainingDoc
 
-@check_permissions('cadastros')
+@check_permissions('cadastrar_funcionario')
 def register_employee(request):
     form = EmployeeForm(
         request.POST or None,
@@ -22,7 +22,7 @@ def register_employee(request):
         {'form': form}
     )
 
-@check_permissions('editar')
+@check_permissions('editar_funcionario')
 def edit_employee(request, employee_id):
     employee = get_object_or_404(
         Employee,
@@ -44,7 +44,7 @@ def edit_employee(request, employee_id):
         'pages/register_form.html',
         {'form': form}
     )
-@check_permissions('excluir')
+@check_permissions('excluir_funcionario')
 def delete_employee(request, employee_id):
     employee = get_object_or_404(
         Employee,
@@ -52,7 +52,7 @@ def delete_employee(request, employee_id):
     )
     employee.delete = True
     employee.save()
-    return redirect(request.path)
+    return redirect('company:company_page', company_id=employee.company.id)
 
 
 def employee_detail(request, employee_id):

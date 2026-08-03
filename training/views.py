@@ -11,6 +11,8 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.http import FileResponse
 from .forms import TrainingRegisterCreateForm
 from utils.utils import generate_training_register_pdf
+from datetime import datetime
+from decorator import check_permissions
 
 
 @login_required
@@ -20,12 +22,14 @@ def home(request):
 
 
 @login_required
+
 def trainings_type_view(request):
     trainings = TrainingType.objects.filter(delete=False)
     return render(request, 'pages/trainings_type_view.html', {'trainings': trainings})
 
 
 @login_required
+@check_permissions('cadastrar_tipo_treinamento')
 def register_training_type(request):
     if request.method == 'POST':
         form = TrainingTypeForm(request.POST, user=request.user)
@@ -43,6 +47,7 @@ def register_training_type(request):
 
 
 @login_required
+@check_permissions('editar_tipo_treinamento')
 def edit_training_type(request, training_type_id):
     training_type = get_object_or_404(TrainingType, pk=training_type_id, delete=False)
 
@@ -60,6 +65,7 @@ def edit_training_type(request, training_type_id):
 
 
 @login_required
+@check_permissions('excluir_tipo_treinamento')
 def delete_training_type(request, training_type_id):
     training_type = get_object_or_404(TrainingType, pk=training_type_id, delete=False)
     training_type.delete = True
@@ -69,6 +75,7 @@ def delete_training_type(request, training_type_id):
 
 
 @login_required
+@check_permissions('cadastrar_treinamento')
 def training_register_create(request, employee_id, training_type_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     training_type = get_object_or_404(TrainingType, pk=training_type_id, delete=False)
@@ -117,6 +124,7 @@ def training_register_create(request, employee_id, training_type_id):
 
 
 @login_required
+@check_permissions('editar_treinamento')
 def edit_training(request, employee_id, training_type_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     training_type = get_object_or_404(TrainingType, pk=training_type_id, delete=False)
@@ -164,6 +172,7 @@ def edit_training(request, employee_id, training_type_id):
 
 
 @login_required
+@check_permissions('excluir_treinamento')
 def delete_training(request, employee_id, training_type_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     training_type = get_object_or_404(TrainingType, pk=training_type_id)
@@ -180,6 +189,7 @@ def delete_training(request, employee_id, training_type_id):
 
 
 @login_required
+@check_permissions('cadastrar_documento_treinamento')
 def upload_training_doc(request, employee_id):
     employee = get_object_or_404(Employee, pk=employee_id)
 
@@ -204,6 +214,7 @@ def upload_training_doc(request, employee_id):
 
 
 @login_required
+@check_permissions('visualizar_documento_treinamento')
 def view_training_docs(request, employee_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     training_docs = TrainingDoc.objects.filter(employee=employee, delete=False)
@@ -244,39 +255,63 @@ def preview_training_doc(request, doc_id):
     response['Content-Disposition'] = f'inline; filename="{training_doc.docs.name}"'
     return response
 
+def _parse_date(value):
+    value = (value or '').strip()
+    if not value:
+        return None
+    for fmt in ('%d/%m/%Y', '%Y-%m-%d'):
+        try:
+            return datetime.strptime(value, fmt).date()
+        except ValueError:
+            continue
+    return None
 
 
- 
- 
- 
 @login_required
+@check_permissions('gerar_pdf_treinamento')
 def training_register_create_pdf(request, employee_id):
-    """
-    Tela de registro de treinamentos de um colaborador.
-    Mostra TODOS os TrainingType ativos como checkbox, com os treinamentos
-    do Role do colaborador já pré-marcados. Os campos de eficácia/datas/
-    instrutor/avaliador são compartilhados entre todos os treinamentos
-    marcados nesta submissão.
-    """
     employee = get_object_or_404(Employee, pk=employee_id, delete=False)
 
+    # já registrados -> a linha vira "edição" no template
+    existing_by_type_id = {
+        r.training_type_id: r
+        for r in TrainingRegister.objects.filter(employee=employee, delete=False)
+    }
+
     if request.method == 'POST':
-        form = TrainingRegisterCreateForm(
-            request.POST, user=request.user, employee=employee
-        )
+        form = TrainingRegisterCreateForm(request.POST, user=request.user, employee=employee)
         if form.is_valid():
-            registers = form.save()
+            overrides = {}
+            for training_type in form.cleaned_data['training_types']:
+                tid = training_type.id
+                is_override = request.POST.get(f'override_{tid}') == '1'
+                if not is_override:
+                    continue
+
+                overrides[tid] = {
+                    'effectiveness': request.POST.get(f'effectiveness_{tid}', '').strip() or None,
+                    'instructor': request.POST.get(f'instructor_{tid}', '').strip() or None,
+                    'evaluator': request.POST.get(f'evaluator_{tid}', '').strip() or None,
+                    'aplication_data_training': _parse_date(request.POST.get(f'aplication_data_training_{tid}', '')),
+                    'avaling_data_training': _parse_date(request.POST.get(f'avaling_data_training_{tid}', '')),
+                }
+
+            results = form.save(overrides)
             messages.success(
                 request,
-                f'{len(registers)} treinamento(s) registrado(s) para {employee.name}.',
+                f'{len(results)} treinamento(s) salvo(s) para {employee.name}.',
             )
             return redirect('register_pdf', employee_id=employee.id)
+        messages.error(request, 'Corrija os erros abaixo.')
     else:
         form = TrainingRegisterCreateForm(user=request.user, employee=employee)
 
-    return render(request, 'pages/training_register_form.html', {
+    return render(request, 'pages/training_register_create_pdf.html', {
         'form': form,
         'employee': employee,
+        'training_types': form.fields['training_types'].queryset,
+        'existing_by_type_id': existing_by_type_id,
+        'effectiveness_choices': TrainingRegister.effectiveness_choices,
     })
 
 

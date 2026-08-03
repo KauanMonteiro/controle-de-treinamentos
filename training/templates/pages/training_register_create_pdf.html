@@ -1,0 +1,171 @@
+{% include 'partials/head.html' %}
+<body>
+{% include 'partials/header.html' %}
+
+<main class="page-main">
+<div class="django-form">
+
+<h2>Registrar / Editar Treinamentos</h2>
+<p class="help-text">
+    Funcionário: <strong>{{ employee.name }}</strong>
+</p>
+
+<form method="post" enctype="multipart/form-data" class="django-form" novalidate>
+{% csrf_token %}
+
+{% if form.non_field_errors %}
+  <div class="form-group has-error">{{ form.non_field_errors }}</div>
+{% endif %}
+
+<h3>Padrão (aplicado a todos os treinamentos selecionados, exceto os marcados como diferentes)</h3>
+
+<div class="form-group {% if form.effectiveness.errors %}has-error{% endif %}">
+  {{ form.effectiveness.label_tag }}
+  {{ form.effectiveness }}
+  {{ form.effectiveness.errors }}
+</div>
+
+<div class="form-group {% if form.instructor.errors %}has-error{% endif %}">
+  {{ form.instructor.label_tag }}
+  {{ form.instructor }}
+  {{ form.instructor.errors }}
+</div>
+
+<div class="form-group {% if form.evaluator.errors %}has-error{% endif %}">
+  {{ form.evaluator.label_tag }}
+  {{ form.evaluator }}
+  {{ form.evaluator.errors }}
+</div>
+
+<div class="form-group {% if form.aplication_data_training.errors %}has-error{% endif %}">
+  {{ form.aplication_data_training.label_tag }}
+  {{ form.aplication_data_training }}
+  {{ form.aplication_data_training.errors }}
+</div>
+
+<div class="form-group {% if form.avaling_data_training.errors %}has-error{% endif %}">
+  {{ form.avaling_data_training.label_tag }}
+  {{ form.avaling_data_training }}
+  {{ form.avaling_data_training.errors }}
+</div>
+
+<h3>Treinamentos</h3>
+
+{% for training_type in training_types %}
+<div class="training-row" style="border:1px solid #ddd; border-radius:6px; padding:12px 16px; margin-bottom:16px;">
+
+  <div class="form-group" style="display:flex; justify-content:space-between; align-items:center;">
+    <label>
+      <input type="checkbox" name="training_types" value="{{ training_type.id }}"
+             id="tt_{{ training_type.id }}"
+             {% if training_type.id in form.training_types.initial %}checked{% endif %}>
+      <strong>{{ training_type.name }}</strong>
+      {% if existing %}
+        <span class="help-text">(já registrado — editando)</span>
+      {% else %}
+        <span class="help-text">(novo)</span>
+      {% endif %}
+    </label>
+
+    <button type="button" class="btn-cancel btn-toggle-override"
+            data-target="override_block_{{ training_type.id }}"
+            data-hidden="override_{{ training_type.id }}">
+      Informações diferentes para este treinamento
+    </button>
+  </div>
+
+  <input type="hidden" name="override_{{ training_type.id }}"
+         id="override_{{ training_type.id }}"
+         value="{% if existing %}1{% else %}0{% endif %}">
+
+  <div class="override-block" id="override_block_{{ training_type.id }}"
+       style="{% if not existing %}display:none;{% endif %} margin-top:10px; padding-top:10px; border-top:1px dashed #ccc;">
+
+    <div class="form-group">
+      <label for="effectiveness_{{ training_type.id }}">Eficácia</label>
+      <select class="form-control" name="effectiveness_{{ training_type.id }}"
+              id="effectiveness_{{ training_type.id }}">
+        <option value="">-- usar padrão --</option>
+        {% for value, label in effectiveness_choices %}
+          <option value="{{ value }}" {% if existing and existing.effectiveness == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="instructor_{{ training_type.id }}">Instrutor</label>
+      <input type="text" class="form-control" name="instructor_{{ training_type.id }}"
+             id="instructor_{{ training_type.id }}"
+             value="{% if existing %}{{ existing.instructor|default:'' }}{% endif %}">
+    </div>
+
+    <div class="form-group">
+      <label for="evaluator_{{ training_type.id }}">Avaliador</label>
+      <input type="text" class="form-control" name="evaluator_{{ training_type.id }}"
+             id="evaluator_{{ training_type.id }}"
+             value="{% if existing %}{{ existing.evaluator|default:'' }}{% endif %}">
+    </div>
+
+    <div class="form-group">
+      <label for="aplication_data_training_{{ training_type.id }}">Data de Aplicação do Treinamento</label>
+      <input type="text" class="form-control datepicker"
+             name="aplication_data_training_{{ training_type.id }}"
+             id="aplication_data_training_{{ training_type.id }}"
+             value="{% if existing %}{{ existing.aplication_data_training|date:'d/m/Y' }}{% endif %}"
+             placeholder="dd/mm/aaaa">
+    </div>
+
+    <div class="form-group">
+      <label for="avaling_data_training_{{ training_type.id }}">Data de Avaliação do Treinamento</label>
+      <input type="text" class="form-control datepicker"
+             name="avaling_data_training_{{ training_type.id }}"
+             id="avaling_data_training_{{ training_type.id }}"
+             value="{% if existing %}{{ existing.avaling_data_training|date:'d/m/Y'|default:'' }}{% endif %}"
+             placeholder="dd/mm/aaaa">
+    </div>
+
+  </div>
+</div>
+{% endfor %}
+
+<div class="form-actions">
+<a href="{% url 'employee:employee_detail' employee_id=employee.id %}" class="btn-cancel">Cancelar</a>
+<button type="submit" class="btn-submit">Salvar</button>
+</div>
+</form>
+
+</div>
+</main>
+
+{% include 'partials/footer.html' %}
+</body>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.datepicker').forEach(function(input) {
+    input.addEventListener('input', function() {
+      let value = this.value.replace(/\D/g, '');
+      if (value.length > 8) value = value.slice(0, 8);
+      if (value.length >= 3) value = value.slice(0, 2) + '/' + value.slice(2);
+      if (value.length >= 6) value = value.slice(0, 5) + '/' + value.slice(5);
+      this.value = value;
+    });
+  });
+
+  document.querySelectorAll('.btn-toggle-override').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const block = document.getElementById(btn.dataset.target);
+      const hiddenFlag = document.getElementById(btn.dataset.hidden);
+      const isOpen = block.style.display !== 'none';
+
+      if (isOpen) {
+        block.style.display = 'none';
+        hiddenFlag.value = '0';
+      } else {
+        block.style.display = 'block';
+        hiddenFlag.value = '1';
+      }
+    });
+  });
+});
+</script>
