@@ -1,7 +1,10 @@
-from django.shortcuts import render,redirect,reverse
+from django.shortcuts import render, redirect, reverse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+
 from .forms import UserRegisterForm
-from django.contrib.auth import authenticate, login
 from decorator import check_permissions
+
 
 def login_view(request):
     if request.method == "POST":
@@ -14,24 +17,42 @@ def login_view(request):
             password=password
         )
 
-        if user:
+        if user is not None:
             login(request, user)
+            messages.success(request, f'Bem-vindo(a), {user.get_full_name() or user.username}!')
             return redirect('home')
+
+        messages.error(request, 'Usuário ou senha inválidos.')
 
     return render(request, 'pages/login.html')
 
+
 def logout_view(request):
-    request.session.flush()
+    logout(request)
+    messages.success(request, 'Logout realizado com sucesso.')
     return redirect(reverse('home'))
+
 
 @check_permissions('cadastrar_usuario')
 def register_view(request):
     form = UserRegisterForm(request.POST or None)
+
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return redirect('home') 
-    return render(request, 'pages/register_form.html', {'form': form})    
+            messages.success(request, 'Usuário cadastrado com sucesso!')
+            return redirect('home')
+        else:
+            messages.error(
+                request,
+                'Erro ao cadastrar o usuário. Verifique os campos informados.'
+            )
+
+    return render(
+        request,
+        'pages/register_form.html',
+        {'form': form}
+    )
 
 def delete_user(request, user_id):
     pass

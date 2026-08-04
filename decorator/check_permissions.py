@@ -1,5 +1,7 @@
 from functools import wraps
-from django.http import HttpResponseForbidden
+
+from django.contrib import messages
+from django.shortcuts import redirect
 
 
 def check_permissions(permission):
@@ -11,7 +13,8 @@ def check_permissions(permission):
             if permission in (user.permissoes or []):
                 return view_func(request, *args, **kwargs)
 
-            return HttpResponseForbidden("Você não tem permissão.")
+            messages.error(request, "Você não possui permissão para acessar este recurso.")
+            return redirect("home")
 
         return wrapper
 
