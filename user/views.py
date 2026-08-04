@@ -6,6 +6,7 @@ from .forms import UserRegisterForm
 from decorator import check_permissions
 from django.shortcuts import get_object_or_404
 
+@check_permissions('cadastrar_usuario')
 def user_page(request):
     user = User.objects.all()
     return render(request,'pages/user_page.html',{'user':user})
@@ -36,10 +37,9 @@ def logout_view(request):
     messages.success(request, 'Logout realizado com sucesso.')
     return redirect(reverse('home'))
 
-
 @check_permissions('cadastrar_usuario')
 def register_view(request):
-    form = UserRegisterForm(request.POST or None,instance=User,)
+    form = UserRegisterForm(request.POST or None,)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -57,20 +57,30 @@ def register_view(request):
         'pages/register_form.html',
         {'form': form}
     )
-
-@check_permissions('editar_usuario')
-def edit_view(request):
-    form = UserRegisterForm(request.POST or None)
+@check_permissions('cadastrar_usuario')
+def edit_view(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    form = UserRegisterForm(request.POST or None, instance=user)
 
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Usuário cadastrado com sucesso!')
+            edited_user = form.save(commit=False)
+
+            new_password = form.cleaned_data.get('password')
+
+            if new_password:
+                edited_user.set_password(new_password)
+            else:
+                edited_user.password = user.password
+
+            edited_user.save()
+            form.save_m2m() 
+            messages.success(request, 'Usuário editado com sucesso!')
             return redirect('home')
         else:
             messages.error(
                 request,
-                'Erro ao cadastrar o usuário. Verifique os campos informados.'
+                'Erro ao editar o usuário. Verifique os campos informados.'
             )
 
     return render(

@@ -272,9 +272,10 @@ body::before {
    FORMULÁRIO (para cadastros/edições)
    ============================================ */
 .django-form {
-  max-width: 640px;
+  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 1.75rem;
+  padding: 3rem 3.5rem;
   background: var(--white);
   border-radius: var(--radius);
   box-shadow: var(--shadow-deep), 0 8px 30px rgba(6, 146, 209, 0.08);
@@ -295,16 +296,28 @@ body::before {
   background-size: 200% auto;
   animation: gradientFlow 5s ease infinite;
 }
-.django-form .form-group {
+
+/* Grid opcional para colocar campos lado a lado em telas largas.
+   Envolva 2 (ou mais) .form-group com uma div.form-row no HTML. */
+.django-form .form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0 1.75rem;
+}
+.django-form .form-row .form-group {
   margin-bottom: 1.5rem;
+}
+
+.django-form .form-group {
+  margin-bottom: 1.75rem;
   animation: fadeInUp 0.4s ease both;
 }
 .django-form label {
   display: block;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   letter-spacing: 0.02em;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
   color: var(--text-dark);
   transition: color var(--transition);
 }
@@ -318,8 +331,8 @@ body::before {
 .django-form textarea,
 .django-form select {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
+  padding: 0.9rem 1.1rem;
+  font-size: 1.02rem;
   font-family: var(--font);
   background: var(--bg-soft);
   border: 1.5px solid transparent;
@@ -345,7 +358,7 @@ body::before {
 }
 .django-form textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 140px;
 }
 .django-form select:not([multiple]) {
   appearance: none;
@@ -356,7 +369,7 @@ body::before {
 }
 .django-form select[multiple] {
   height: auto;
-  min-height: 120px;
+  min-height: 140px;
   padding: 0.5rem;
   background-image: none;
 }
@@ -480,7 +493,7 @@ body::before {
   box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.18);
 }
 .django-form .form-actions {
-  margin-top: 2rem;
+  margin-top: 2.25rem;
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
@@ -490,7 +503,7 @@ body::before {
   background-size: 200% auto;
   color: var(--white);
   border: none;
-  padding: 0.75rem 2.5rem;
+  padding: 0.8rem 2.75rem;
   border-radius: 50px;
   font-weight: 700;
   font-size: 1rem;
@@ -523,7 +536,7 @@ body::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 2rem;
+  padding: 0.8rem 2.25rem;
   background: var(--bg-soft);
   color: var(--text-dark);
   border-radius: 50px;
@@ -550,6 +563,7 @@ body::before {
   flex-direction: column;
   position: relative;
   z-index: 1;
+  padding: 2rem 1.5rem;
 }
 
 /* ============================================
@@ -1122,6 +1136,9 @@ body::before {
     border-radius: 0;
     box-shadow: none;
   }
+  .django-form .form-row {
+    grid-template-columns: 1fr;
+  }
   .django-form .checkbox-group,
   .django-form .radio-group {
     flex-direction: column;
@@ -1138,6 +1155,9 @@ body::before {
 }
 
 @media (max-width: 768px) {
+  .django-form {
+    padding: 1.5rem;
+  }
   .company-header {
     flex-direction: column;
     align-items: stretch;

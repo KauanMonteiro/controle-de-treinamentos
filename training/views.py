@@ -14,7 +14,6 @@ from utils.utils import generate_training_register_pdf
 from datetime import datetime
 from decorator import check_permissions
 
-
 @login_required
 def home(request):
     companies = Company.objects.filter(delete=False)
@@ -22,7 +21,6 @@ def home(request):
 
 
 @login_required
-
 def trainings_type_view(request):
     trainings = TrainingType.objects.filter(delete=False)
     return render(request, 'pages/trainings_type_view.html', {'trainings': trainings})
