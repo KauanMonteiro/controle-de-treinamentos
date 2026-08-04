@@ -1,0 +1,78 @@
+{% include "partials/head.html" %}
+{% include "partials/header.html" %}
+
+<main class="page-main">
+
+
+    <div class="page-list">
+
+        <div class="table-wrapper">
+            <div class="table-header">
+                <h2>Usuários</h2>
+                <a href="{% url 'user:register' %}" class="btn-submit">
+                    <i class="fas fa-plus"></i> Novo Usuário
+                </a>
+            </div>
+
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Usuário</th>
+                        <th style="text-align:center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in user %}
+                    <tr>
+                        <td data-label="#">{{ forloop.counter }}</td>
+                        <td data-label="Usuário">{{ u.username }}</td>
+                        <td data-label="Ações">
+                            <div class="actions">
+                                <a href="{% url 'user:edit' u.id %}" class="edit" title="Editar">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+
+                                <a href="#" class="delete" title="Excluir"
+                                   onclick="confirmDelete('{{ u.id }}', '{{ u.username|escapejs }}'); return false;">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+
+                                <form id="delete-form-{{ u.id }}"
+                                      action="{% url 'user:delete_user' u.id %}"
+                                      method="post" style="display:none;">
+                                    {% csrf_token %}
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align:center;">Nenhum usuário cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+{% include "partials/footer.html" %}
+
+<script>
+function filterUsers() {
+    const input = document.getElementById('userSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('#usersTable tbody tr');
+    rows.forEach(row => {
+        const username = row.querySelector('td[data-label="Usuário"]');
+        if (!username) return;
+        row.style.display = username.textContent.toLowerCase().includes(input) ? '' : 'none';
+    });
+}
+
+function confirmDelete(userId, username) {
+    if (confirm('Tem certeza que deseja excluir o usuário "' + username + '"? Essa ação não poderá ser desfeita.')) {
+        document.getElementById('delete-form-' + userId).submit();
+    }
+}
+</script>

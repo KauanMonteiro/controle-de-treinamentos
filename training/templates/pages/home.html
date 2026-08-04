@@ -16,32 +16,34 @@
             <a href="{% url "company:register_company" %}">
               <i class="fas fa-plus"></i> Empresa
             </a>
+
             <a href="{% url "employee:list_departments" %}">
               <i class="fas fa-eye"></i> Departamento
             </a>
+
             <a href="{% url "employee:role_list" %}">
               <i class="fas fa-eye"></i> Função
             </a>
-            <a href="{% url "employee:register_employee" %}">
-              <i class="fas fa-plus"></i> Funcionário
+
+            <a href="{% url "user:user_page" %}">
+              <i class="fas fa-eye"></i> Usuário
             </a>
-            <a href="{% url "user:register" %}">
-              <i class="fas fa-plus"></i> Usuário
-            </a>
+
             <a href="{% url "trainings_type_view" %}">
-              <i class="fas fa-eye"></i> Treinamentos
+              <i class="fas   fa-eye"></i> Treinamentos
             </a>
           </div>
+
       </div>
 
       <!-- Tabela de empresas -->
       <div class="table-wrapper">
-        <table>
+        <table data-paginate="10">
           <thead>
             <tr>
               <th>Nome</th>
               <th>CNPJ</th>
-              <th>Ações</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
