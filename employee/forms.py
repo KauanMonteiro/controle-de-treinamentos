@@ -49,12 +49,12 @@ class RoleForm(ModelForm):
 
     def save(self, commit=True):
         role = super().save(commit=False)
-        role.name = self.cleaned_data['name']
-        role.department = self.cleaned_data['department']
         role.created_by = self.user
-        role.trainings.set(self.cleaned_data['trainings'])
+
         if commit:
             role.save()
+            self.save_m2m()
+
         return role
 
 class EmployeeForm(ModelForm):
@@ -64,6 +64,8 @@ class EmployeeForm(ModelForm):
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
+        if 'company' in self.fields:
+            self.fields['company'].disabled = True 
         self.user = user
         self.fields['company'].queryset = Company.objects.filter(delete=False)
 

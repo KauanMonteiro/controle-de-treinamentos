@@ -17,6 +17,22 @@ class TrainingType(models.Model):
     delete = models.BooleanField(default=False, verbose_name='Excluído')
     
 
+    def save(self, *args, **kwargs):
+            if self.pk:
+                try:
+                    old = TrainingType.objects.get(pk=self.pk)
+                    
+                    if old.revision != self.revision:
+                        from training.models import TrainingRegister  
+                        TrainingRegister.objects.filter(
+                            training_type=self,
+                            delete=False
+                        ).update(delete=True)
+                except TrainingType.DoesNotExist:
+                    pass  
+
+            super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 

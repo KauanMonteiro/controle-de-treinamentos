@@ -4,7 +4,7 @@ app_name = 'employee'
 urlpatterns = [
     path('register_department/', views.register_department, name='register_department'),
     path('register_role/', views.register_role, name='register_role'),
-    path('register_employee/', views.register_employee, name='register_employee'),
+    path('register_employee/<int:company_id>/', views.register_employee, name='register_employee'),
     path('edit_department/<int:department_id>/', views.edit_department, name='edit_department'),
     path('edit_role/<int:role_id>/', views.edit_role, name='edit_role'),
     path('edit_employee/<int:employee_id>/', views.edit_employee, name='edit_employee'),
@@ -14,5 +14,6 @@ urlpatterns = [
     path('list_departments/', views.list_departments, name='list_departments'),
     path('role_list/', views.role_list, name='role_list'),
     path('employee_detail/<int:employee_id>/', views.employee_detail, name='employee_detail'),
+    path('search/', views.search, name='search'),
 
 ]

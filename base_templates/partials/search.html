@@ -1,0 +1,111 @@
+<div class="search-bar-wrapper">
+  <div class="search-bar">
+    <input
+      type="text"
+      id="global-search"
+      placeholder="Pesquisar funcionários, departamentos, funções, treinamentos..."
+      autocomplete="off"
+    />
+    <span class="search-icon"><i class="fas fa-search"></i></span>
+    <div id="search-results" class="search-dropdown"></div>
+  </div>
+</div>
+<script>
+ (function () {
+  const input = document.getElementById('global-search');
+  const dropdown = document.getElementById('search-results');
+  let debounceTimer;
+
+  if (!input || !dropdown) return; // segurança
+
+  // Mapeamento de tipo → ícone Font Awesome
+  const iconMap = {
+    company: 'fa-building',
+    department: 'fa-sitemap',
+    role: 'fa-user-tag',
+    employee: 'fa-user',
+    training_type: 'fa-chalkboard-teacher',
+  };
+
+  // Tradução do tipo para badge
+  const labelMap = {
+    company: 'Empresa',
+    department: 'Departamento',
+    role: 'Função',
+    employee: 'Funcionário',
+    training_type: 'Treinamento',
+  };
+
+  input.addEventListener('input', function () {
+    clearTimeout(debounceTimer);
+    const query = this.value.trim();
+    if (query.length === 0) {
+      dropdown.innerHTML = '';
+      dropdown.classList.remove('active');
+      return;
+    }
+    debounceTimer = setTimeout(() => {
+      fetch(`/employee/search/?q=${encodeURIComponent(query)}`)
+        .then(response => {
+          if (!response.ok) throw new Error('Erro na rede');
+          return response.json();
+        })
+        .then(data => {
+          dropdown.innerHTML = '';
+          if (data.results.length === 0) {
+            dropdown.innerHTML =
+              '<div class="search-no-results">Nenhum resultado encontrado</div>';
+          } else {
+            data.results.forEach(item => {
+              const a = document.createElement('a');
+              a.href = item.url;
+              a.className = 'search-item';
+
+              const iconClass = iconMap[item.type] || 'fa-circle';
+              const badgeText = labelMap[item.type] || item.type;
+
+              // Extrair subtítulo (para employee já vem com " — empresa/role")
+              let extraInfo = '';
+              if (item.type === 'employee' && item.name.includes(' — ')) {
+                extraInfo = item.name.split(' — ')[1] || '';
+              }
+
+              a.innerHTML = `
+                <span class="item-icon"><i class="fas ${iconClass}"></i></span>
+                <span class="item-text">
+                  <strong>${item.name}</strong>
+                  ${extraInfo ? `<small>${extraInfo}</small>` : ''}
+                </span>
+                <span class="item-badge">${badgeText}</span>
+              `;
+              dropdown.appendChild(a);
+            });
+          }
+          dropdown.classList.add('active');
+        })
+        .catch(err => {
+          console.error('Erro na busca:', err);
+          dropdown.innerHTML =
+            '<div class="search-no-results">Erro ao carregar resultados</div>';
+          dropdown.classList.add('active');
+        });
+    }, 300);
+  });
+
+  // Fechar dropdown ao clicar fora
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.search-bar')) {
+      dropdown.classList.remove('active');
+    }
+  });
+
+  // Fechar ao pressionar Escape
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      dropdown.classList.remove('active');
+      input.blur(); // opcional: tira o foco do campo
+    }
+  });
+
+})();
+</script>

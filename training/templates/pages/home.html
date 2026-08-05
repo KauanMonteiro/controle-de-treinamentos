@@ -8,10 +8,7 @@
   <main>
     <div class="page-list">
       <div class="list-header">
-        <div class="search-bar">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" placeholder="" />
-        </div>
+          {% include "partials/search.html" %}
           <div class="action-buttons">
             <a href="{% url "company:register_company" %}">
               <i class="fas fa-plus"></i> Empresa
@@ -63,5 +60,7 @@
   </main>
 
   {% include "partials/footer.html" %}
+
 </body>
+
 </html>

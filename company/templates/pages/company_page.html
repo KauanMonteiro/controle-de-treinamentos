@@ -28,7 +28,7 @@
       <div class="table-wrapper">
         <div class="table-header">
           <h2>Funcionários</h2>
-          <a href="{% url 'employee:register_employee' %}" class="btn-submit">
+          <a href="{% url 'employee:register_employee' company.id %}" class="btn-submit">
             <i class="fas fa-plus"></i> Adicionar Funcionário
           </a>
         </div>
