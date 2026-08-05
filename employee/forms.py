@@ -1,6 +1,8 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, CheckboxSelectMultiple
 from .models import Department, Role, Employee
 from company.models import Company
+
+
 class DepartmentForm(ModelForm):
     class Meta:
         model = Department
@@ -19,16 +21,19 @@ class DepartmentForm(ModelForm):
 
     def save(self, commit=True):
         department = super().save(commit=False)
-        department.name = self.cleaned_data['name']
         department.created_by = self.user
         if commit:
             department.save()
         return department
 
+
 class RoleForm(ModelForm):
     class Meta:
         model = Role
         fields = ['name', 'department', 'trainings']
+        widgets = {
+            'trainings': CheckboxSelectMultiple(),  # checkboxes
+        }
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -50,12 +55,11 @@ class RoleForm(ModelForm):
     def save(self, commit=True):
         role = super().save(commit=False)
         role.created_by = self.user
-
         if commit:
             role.save()
-            self.save_m2m()
-
+            self.save_m2m()  # necessário para ManyToMany
         return role
+
 
 class EmployeeForm(ModelForm):
     class Meta:
@@ -65,7 +69,7 @@ class EmployeeForm(ModelForm):
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         if 'company' in self.fields:
-            self.fields['company'].disabled = True 
+            self.fields['company'].disabled = True
         self.user = user
         self.fields['company'].queryset = Company.objects.filter(delete=False)
 
@@ -84,7 +88,6 @@ class EmployeeForm(ModelForm):
 
     def save(self, commit=True):
         employee = super().save(commit=False)
-        employee.name = self.cleaned_data['name']
         employee.role = self.cleaned_data['role']
         employee.company = self.cleaned_data['company']
         employee.created_by = self.user
