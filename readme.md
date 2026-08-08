@@ -28,3 +28,13 @@ A estrutura principal do projeto é organizada em apps Django, cada um com respo
 - user: autenticação, usuários e permissões.
 - decorator: lógica reutilizável para validação de permissões.
 - base_templates e static: templates base e arquivos estáticos da interface.
+
+## Licença
+
+Este projeto é distribuído sob os termos da **GNU Affero General Public License (AGPL), versão 3 ou posterior**.
+
+**Copyright (C) 2026 Kauãn Monteiro Silva.**
+
+Consulte o arquivo [`LICENSE`](LICENSE) para obter o texto completo da licença.
+
+Em resumo, você pode usar, estudar, modificar e redistribuir este software de acordo com os termos da **AGPL-3.0 ou posterior**.
